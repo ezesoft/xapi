@@ -1,0 +1,340 @@
+﻿syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "utilities.proto";
+
+message SubmitSingleOrderRequest{
+	string Symbol = 1;
+	string Side = 2;
+	int32 Quantity = 3;
+	string Route = 4;
+	string Account = 5;
+	string OrderTag = 6;
+	string TicketId = 7;
+	map<string, string> ExtendedFields = 8;
+	bool Staged = 9;
+	bool ClaimRequire = 10;
+	string UserToken = 11;
+}
+
+message SubmitSingleOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message ChangeSingleOrderRequest{
+	string OrderId = 1;
+	int32 Quantity = 2;
+	map<string, string> ExtendedFields = 3;
+	string UserToken = 4;
+}
+
+message ChangeSingleOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message CancelSingleOrderRequest{
+	string OrderId = 1;
+	string UserToken = 2;
+}
+
+message CancelSingleOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message SubmitPairOrderRequest{
+	string Leg1_Symbol = 1;
+	string Leg1_Side = 2;
+	int32 Leg1_Quantity = 3;
+	string Route = 4;
+	map<string, string> Leg1_ExtendedFields = 5;
+	string Leg2_Symbol = 6;
+	string Leg2_Side = 7;
+	int32 Leg2_Quantity = 8;
+	map<string, string> Leg2_ExtendedFields = 9;
+	map<string, string> OptionalFields = 10;
+	bool Staged = 11;
+	bool ClaimRequire = 12;
+	string Account = 13;
+	string UserToken = 14;
+	string OrderTag = 15;
+	string TicketId = 16;
+}
+
+message SubmitPairOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message ChangePairOrderRequest{
+	string PairOrderId = 1;
+	string Leg1OrderId = 2;
+	string Leg2OrderId = 3;
+	int32 Leg1_Quantity = 4;
+	int32 Leg2_Quantity = 5;
+	map<string, string> Leg1_ExtendedFields = 6;
+	map<string, string> Leg2_ExtendedFields = 7;
+	map<string, string> OptionalFields = 8;
+	string UserToken = 9;
+}
+
+message ChangePairOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message CancelPairOrderRequest{
+	string OrderId = 1;
+	string UserToken = 2;
+}
+
+message CancelPairOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message SubmitSeedDataRequest{
+	string Account = 1;
+	string Symbol = 2;
+	string UserToken = 3;
+}
+
+message SubmitSeedDataResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message SubscribeOrderInfoRequest{
+	enum SubscriptionLevel{
+		FILL = 0;
+		STATUS = 1;
+	}
+	SubscriptionLevel Level = 1;
+	string UserToken = 2;
+}
+
+message SubscribeOrderInfoResponse{
+	google.protobuf.Timestamp submitTime = 1;
+	string OrderId = 2;
+	string LinkedOrderId = 3;
+	string RefersToId = 4;
+	string TicketId = 5;
+	string OriginalOrderId = 6;
+	string Symbol = 7;
+	string Type = 8;
+	string CurrentStatus = 9;
+	string TraderId =10;
+	string ClaimedByClerk = 11;
+	string Volume = 12;
+	string Price = 13;
+	string PriceType = 14;
+	string Buyorsell = 15;
+	string BOOKING_TYPE = 16;
+	string MIFID_IDM = 17;
+	string REF_MGR_NOTES = 18;
+	string PairSpreadType = 19;
+	string Reason = 20;
+	string TimeStamp = 21;
+	map<string, string> ExtendedFields = 22;
+}
+
+message UserAccountsRequest{
+	string UserToken = 1;
+}
+
+message UserAccountsResponse{
+	map<string, string> Accounts = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message OrderRow{
+	google.protobuf.Timestamp ExpirDate = 1;
+	google.protobuf.Timestamp NewsDate = 2;
+	google.protobuf.DoubleValue AllocatedValue = 3;
+	google.protobuf.DoubleValue AvgPrice = 4;
+	google.protobuf.DoubleValue Basisvalue = 5;
+	google.protobuf.DoubleValue Commission = 6;
+	google.protobuf.DoubleValue CommissionRate = 7;
+	google.protobuf.DoubleValue EcnFee = 8;
+	google.protobuf.DoubleValue Latency3 = 9;
+	google.protobuf.DoubleValue Latency6 = 10;
+	google.protobuf.DoubleValue PairCash = 11;
+	google.protobuf.DoubleValue PairImbalanceLimit = 12;
+	google.protobuf.DoubleValue PairLeg1Benchmark = 13;
+	google.protobuf.DoubleValue PairLeg2Benchmark = 14;
+	google.protobuf.DoubleValue PairRatio = 15;
+	google.protobuf.DoubleValue PairSpread = 16;
+	google.protobuf.DoubleValue PairTarget = 17;
+	google.protobuf.DoubleValue SpreadClip = 18;
+	google.protobuf.Int32Value AcctType = 19;
+	google.protobuf.Int32Value BookId = 20;
+	google.protobuf.Int32Value CommissionRateType = 21;
+	google.protobuf.Int32Value CrossFlag = 22;
+	google.protobuf.Int32Value DateIndex = 23;
+	google.protobuf.Int32Value ExecutionState = 24;
+	google.protobuf.Int32Value ExtendedStateFlags = 25;
+	google.protobuf.Int32Value ExtendedStateFlags2 = 26;
+	google.protobuf.Int32Value ExternalAcceptanceFlag = 27;
+	google.protobuf.Int32Value FornexSourceFlags = 28;
+	google.protobuf.Int32Value GwBookSeqNo = 29;
+	google.protobuf.Int32Value LinkedOrderCancellation = 30;
+	google.protobuf.Int32Value LinkedOrderRelationship = 31;
+	google.protobuf.Int32Value Minmove = 32;
+	google.protobuf.Int32Value OmsClientType = 33;
+	google.protobuf.Int32Value OrderFlags = 34;
+	google.protobuf.Int32Value OrderFlags2 = 35;
+	google.protobuf.Int32Value OrderResidual = 36;
+	google.protobuf.Int32Value OriginalVolume = 37;
+	google.protobuf.Int32Value PairImbalanceLimitType = 38;
+	google.protobuf.Int32Value PairLeg1BenchmarkType = 39;
+	google.protobuf.Int32Value PairLeg2BenchmarkType = 40;
+	google.protobuf.Int32Value PairSpreadType = 41;
+	google.protobuf.Int32Value Rank = 42;
+	google.protobuf.Int32Value RemainingVolume = 43;
+	google.protobuf.Int32Value SharesAllocated = 44;
+	google.protobuf.Int32Value SpreadClipType = 45;
+	google.protobuf.Int32Value SpreadLegCount = 46;
+	google.protobuf.Int32Value SpreadLegLeanPriority = 47;
+	google.protobuf.Int32Value SpreadLegNumber = 48;
+	google.protobuf.Int32Value SpreadLegPriceType = 49;
+	google.protobuf.Int32Value SpreadNumLegs = 50;
+	google.protobuf.Int32Value Styp = 51;
+	google.protobuf.Int32Value TboAccountId = 52;
+	google.protobuf.Int32Value UtcOffset = 53;
+	google.protobuf.Int32Value Volume = 54;
+	google.protobuf.Int32Value VolumeTraded = 55;
+	google.protobuf.Int32Value WorkingQty = 56;
+	string Ask = 57;
+	string Bid = 58;
+	string OriginalPrice = 59;
+	string Price = 60;
+	string StopPrice = 61;
+	string StrikePrc = 62;
+	string Bank = 63;
+	string Branch = 64;
+	string Buyorsell = 65;
+	string ClaimedByClerk = 66;
+	string ClientOrderId = 67;
+	string CommissionCode = 68;
+	string Currency = 69;
+	string CurrentStatus = 70;
+	string Customer = 71;
+	string Deposit = 72;
+	string DispName = 73;
+	string Exchange = 74;
+	string Route = 75;
+	string FixTraderId = 76;
+	string GoodFrom = 77;
+	string GoodUntil = 78;
+	string LinkedOrderId = 79;
+	string NewRemoteId = 80;
+	string OppositeParty = 81;
+	string OrderId = 82;
+	string OrderTag = 83;
+	string OriginalOrderId = 84;
+	string OriginalTraderId = 85;
+	string PriceType = 86;
+	string Putcallind = 87;
+	string Reason = 88;
+	string RefersToId = 89;
+	string RemoteId = 90;
+	string ShortLocateId = 91;
+	string Table = 92;
+	string TicketId = 93;
+	string TimeStamp = 94;
+	string TraderCapacity = 95;
+	string TraderId = 96;
+	string Type = 97;
+	string Undersym = 98;
+	string UserMessage = 99;
+	string VolumeType = 100;
+	google.protobuf.Duration NewsTime = 101;
+	google.protobuf.Duration TrdTime = 102;
+	map<string, string> ExtendedFields = 103;
+}
+
+message BasketOrderRequest{
+	string UserToken = 1;
+	repeated OrderRow Orders = 2;
+}
+
+message BasketOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message AllocationType{
+	enum Allocation{
+		UserSubmitAllocation = 0;
+		UserSubmitAllocationEx = 1;
+	}
+	Allocation AllocationOrAllocationEx = 1;
+}
+
+message OrderType{
+	enum Type{
+		UserSubmitOrder = 0;
+		ForeignExecution = 1;
+	}
+	Type TypeOfOrder = 1;
+}
+
+message SubmitAllocationOrderRequest{
+	string OrderId = 1;
+	string Symbol = 2;
+	string Exchange = 3;
+	string SourceAccount = 4;
+	string TargetAccount = 5; //targetaccount
+	int32 TargetQuantity = 6; //tgQty
+	int32 TargetPrice = 7; //tgPrice
+	string UserToken = 8;
+	AllocationType TypeOfAllocation = 9;
+	OrderType OrderTypes = 10;
+}
+
+message SubmitAllocationOrderResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message TradeType{
+	enum TypeofOrder{
+		UserSubmitTradeReport = 0;
+		ForeignExecution = 1;
+	}
+	TypeofOrder OrderTypes = 1;
+}
+
+message SubmitTradeReportRequest{
+	string Symbol = 1;
+	string Side = 2;
+	int32 Quantity = 3;
+	string Account = 4;
+	map<string, string> ExtendedFields = 5;
+	TradeType OrderType = 6;
+	string Route = 7;
+	string UserToken = 8;
+}
+
+message SubmitTradeReportResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+service SubmitOrderService{
+	rpc SubmitSingleOrder (SubmitSingleOrderRequest) returns (SubmitSingleOrderResponse);
+	rpc SubmitPairOrder (SubmitPairOrderRequest) returns (SubmitPairOrderResponse);
+	rpc ChangePairOrder (ChangePairOrderRequest) returns (ChangePairOrderResponse);
+	rpc CancelPairOrder (CancelPairOrderRequest) returns (CancelPairOrderResponse);
+	rpc ChangeSingleOrder (ChangeSingleOrderRequest) returns (ChangeSingleOrderResponse);
+	rpc CancelSingleOrder (CancelSingleOrderRequest) returns (CancelSingleOrderResponse);
+	rpc SubmitSeedData (SubmitSeedDataRequest) returns (SubmitSeedDataResponse);
+	rpc GetUserAccounts (UserAccountsRequest) returns (UserAccountsResponse);
+	rpc SubmitBasketOrder (BasketOrderRequest) returns (BasketOrderResponse);
+	rpc SubscribeOrderInfo (SubscribeOrderInfoRequest) returns (stream SubscribeOrderInfoResponse);
+	rpc SubmitAllocationOrder (SubmitAllocationOrderRequest) returns (SubmitAllocationOrderResponse);
+	rpc SubmitTradeReport (SubmitTradeReportRequest) returns (SubmitTradeReportResponse);
+}

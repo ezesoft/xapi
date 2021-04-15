@@ -1,0 +1,357 @@
+﻿syntax = "proto3";
+import "google/protobuf/timestamp.proto";
+
+message ServerAcknowledgement{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+	string Message = 3;
+}
+
+message StartLoginSrpRequest{
+	string UserName = 1;
+	string Domain = 2;
+}
+
+message StartLoginSrpResponse{
+	string Status = 1;
+	string srpTransactId = 2;
+	string srpSalt = 3;
+	string srpN = 4;
+	string srpg = 5;
+	string srpb = 6;
+	string Response = 7;
+}
+
+message CompleteLoginSrpRequest{
+	string Identity = 1;
+	string srpTransactId = 2;
+	string strEphA = 3;
+	string strMc = 4;
+	string UserName = 5;
+	string Domain = 6;
+	string Locale = 7;
+}
+
+message CompleteLoginSrpResponse{
+	string UserToken = 1;
+	string Response = 2;
+}
+
+message Price{
+	double DecimalValue = 1;
+	int32 Denominator = 2;
+	int32 Numerator = 3;
+	uint32 Base = 4;
+	int32 Int = 5;
+	int32 BaseCode = 6;
+	int32 IntegerValue = 7;
+	bool Isnull = 8;
+}
+
+message Position{
+	double AverageShort0 = 1;
+	double HistShortPrc0 = 2;
+	double Shortpos0 = 3;
+	double OrigShortpos0 = 4;
+	double ScalpedProfit = 5;
+	double Mmr = 6;
+	double BoughtQty = 7;
+	double SoldQty = 8;
+	double SoldShortQty = 9;
+	double BoughtAvgPrc = 10;
+	double SoldAvgPrc = 11;
+	double SoldShortAvgPrc = 12;
+	double Commission = 13;
+	double Shortpos = 14;
+	double AverageShort = 15;
+	double OrigLongpos0 = 16;
+	double Longpos0 = 17;
+	double AverageLong = 18;
+	double Longpos = 19;
+	double AverageLong0 = 20;
+	double HistLongPrc0 = 21;
+	double NetFees = 22;
+	double HistScalpedProfit = 23;
+	string Table = 24;
+	string Bank = 25;
+	string Branch = 26;
+	string Customer = 27;
+	string Deposit = 28;
+	string Currency = 29;
+	string DispName = 30;
+	string Undersym = 31;
+	int32 AcctType = 32;
+	int32 TboAccountId = 33;
+	int32 Rank = 34;
+	int32 Styp = 35;
+}
+
+message AggregatePositionRecord{
+	double SoldShortQty = 1;
+	double SoldQty = 2;
+	double BoughtAvgPrc = 3;
+	double BoughtQty = 4;
+	double IntradayShortAvgPrc = 5;
+	double IntradayShortPos = 6;
+	double ShortAvgPrc = 7;
+	double ShortPos = 8;
+	double IntradayLongAvgPrc = 9;
+	double IntradayLongPos = 10;
+	double LongAvgPrc = 11;
+	double LongPos = 12;
+	double IntradayAvgPrc = 13;
+	double IntradayPos = 14;
+	double TotalAvgPrc = 15;
+	double TotalPos = 16;
+	double SoldAvgPrc = 17;
+	double SoldShortAvgPrc = 18;
+	string DispName = 19;
+	string Deposit = 20;
+	string Customer = 21;
+	string Branch = 22;
+	string Bank = 23;
+}
+
+message OrderResponse{
+	google.protobuf.Timestamp submitTime = 1;
+	string OrderId = 2;
+	string LinkedOrderId = 3;
+	string RefersToId = 4;
+	string TicketId = 5;
+	string OriginalOrderId = 6;
+	string Symbol = 7;
+	string Type = 8;
+	string CurrentStatus = 9;
+	string TraderId =10;
+	string ClaimedByClerk = 11;
+	string Volume = 12;
+	string Price = 13;
+	string PriceType = 14;
+	string Buyorsell = 15;
+	string BOOKING_TYPE = 16;
+	string MIFID_IDM = 17;
+	string REF_MGR_NOTES = 18;
+	string PairSpreadType = 19;
+	string Reason = 20;
+	string TimeStamp = 21;
+	map<string, string> ExtendedFields = 22;
+}
+
+message DepositRow{
+	double Mmr0Adj = 1;
+	double Sma0 = 2;
+	double Sma0Adj = 3;
+	double HouseExcess0 = 4;
+	double Orq0 = 5;
+	double Cost = 6;
+	double Mmr0NonDaytradeAdj = 7;
+	double SrvPendingMargin = 8;
+	double Commission = 9;
+	double NetFees = 10;
+	double HistScalpedProfit = 11;
+	double CashBalanceAdj = 12;
+	double ScalpedProfit = 13;
+	double Mmr = 14;
+	double Mmr0 = 15;
+	double Marketvalue0 = 16;
+	double CashBalance = 17;
+	double EquityBalance = 18;
+	double ExtraCbp = 19;
+	double MinBalance = 20;
+	double MaxOrderSize = 21;
+	double ExcessEq0 = 22;
+	double ExcessEq = 23;
+	double PendingMargin = 24;
+	double CbpRemaining = 25;
+	string CalcTime = 26;
+	string Table = 27;
+	string Bank = 28;
+	string Branch = 29;
+	string Customer = 30;
+	string Deposit = 31;
+	string Currency = 32;
+	int32 TboAccountId = 33;
+	int32 DaysBack = 34;
+	int32 Rank = 35;
+}
+
+message TodaysBalancesRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+}
+
+message TodaysBalancesResponse{
+	repeated DepositRow DepositList = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message TodaysActivityRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+	bool IncludeUserSubmitOrder = 3;
+	bool IncludeUserSubmitStagedOrder = 4;
+	bool IncludeUserSubmitCompoundOrder = 5;
+	bool IncludeForeignExecution = 6;
+	bool IncludeUserSubmitChange = 7;
+	bool IncludeUserSubmitCancel = 8;
+	bool IncludeExchangeAcceptOrder = 9;
+	bool IncludeExchangeTradeOrder = 10;
+	bool IncludeUserSubmitTradeReport = 11;
+	bool IncludeUserSubmitAllocation = 12;
+	bool IncludeUserSubmitAllocationEx = 13;
+	bool IncludeClerkReject = 14;
+}
+
+message TodaysActivityResponse{
+	repeated OrderResponse OrderRecordList = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message BookOrder{
+	OrderResponse Order = 1;
+	TodaysActivityResponse ChangeOrders = 2;
+	TodaysActivityResponse CancelOrders = 3;
+	TodaysActivityResponse Executions = 4;
+	TodaysActivityResponse Allocations = 5;
+	TodaysActivityResponse OrderHistory = 6;
+	bool IsChangeOrCancelPending = 7;
+	int64 ExecutedVolume = 8;
+	int64 RemainingVolume = 9;
+	double AveragePrice = 10;
+}
+
+message TodaysActivityBookRequest{
+	string UserToken = 1;
+	int32 OrderTypeFlags = 2;
+	int32 TimeoutInSeconds = 3;
+}
+
+message TodaysActivityBookResponse{
+	repeated BookOrder BookList = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message TodaysBrokenDownPositionsRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+}
+
+message TodaysBrokenDownPositionsResponse{
+	repeated Position PositionRecords = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message TodaysNetPositionsRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+}
+
+message TodaysNetPositionsResponse{
+	repeated AggregatePositionRecord AggregatePositionsList = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message ConnectRequest{
+	string UserName = 1;
+	string Domain = 2;
+	string Password = 3;
+	string Locale = 4;
+}
+
+message ConnectResponse{
+	string UserToken = 1;
+	string Response = 2;
+}
+
+message DisconnectRequest{
+	string UserToken = 1;
+}
+
+message DisconnectResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message ChangePasswordSRPRequest{
+	string TransactId = 1;
+	string UserName = 2;
+	string Domain = 3;
+	string OldPassword = 4;
+	string NewPassword = 5;
+}
+
+message ChangePasswordSRPResponse{
+	string status = 1;
+	string message = 2;
+}
+
+message SubscribeHeartBeatRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+}
+
+message SubscribeHeartBeatResponse{
+	enum HeartBeatStatus{
+		LIVE = 0;
+		DEAD = 1;
+		UNKNOWN = 2;
+		}
+	HeartBeatStatus Status = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message StrategyListRow{
+	string FirmName = 1;
+	string UserName = 2;
+	string AlgoName = 3;
+	string StrategyName = 4;
+	string StratCreateDate = 5;
+}
+
+message StrategyListRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+}
+
+message StrategyListResponse{
+	repeated StrategyListRow StrategyList = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message TodaysActivityJsonRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+	bool IncludeUserSubmitOrder = 3;
+	bool IncludeUserSubmitStagedOrder = 4;
+	bool IncludeUserSubmitCompoundOrder = 5;
+	bool IncludeForeignExecution = 6;
+	bool IncludeUserSubmitChange = 7;
+	bool IncludeUserSubmitCancel = 8;
+	bool IncludeExchangeAcceptOrder = 9;
+	bool IncludeExchangeTradeOrder = 10;
+	bool IncludeUserSubmitTradeReport = 11;
+	bool IncludeUserSubmitAllocation = 12;
+	bool IncludeUserSubmitAllocationEx = 13;
+	bool IncludeClerkReject = 14;
+}
+
+message TodaysActivityJsonResponse{
+	string TodaysActivityJson = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+service UtilityServices{
+	rpc GetTodaysBalances (TodaysBalancesRequest) returns (TodaysBalancesResponse);
+	rpc GetTodaysActivity (TodaysActivityRequest) returns (TodaysActivityResponse);
+	rpc GetTodaysActivityBook (TodaysActivityBookRequest) returns (TodaysActivityBookResponse);
+	rpc GetTodaysBrokenDownPositions (TodaysBrokenDownPositionsRequest) returns (TodaysBrokenDownPositionsResponse);
+	rpc GetTodaysNetPositions (TodaysNetPositionsRequest) returns (TodaysNetPositionsResponse);
+	rpc Connect (ConnectRequest) returns (ConnectResponse);
+	rpc SubscribeHeartBeat (SubscribeHeartBeatRequest) returns (stream SubscribeHeartBeatResponse);
+	rpc Disconnect (DisconnectRequest) returns (DisconnectResponse);
+	rpc StartLoginSrp (StartLoginSrpRequest) returns (StartLoginSrpResponse);
+	rpc CompleteLoginSrp (CompleteLoginSrpRequest) returns (CompleteLoginSrpResponse);
+	rpc ChangePasswordSRP (ChangePasswordSRPRequest) returns (ChangePasswordSRPResponse);
+	rpc GetStrategyList (StrategyListRequest) returns (StrategyListResponse);
+	rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
+}

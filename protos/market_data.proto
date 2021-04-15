@@ -1,0 +1,462 @@
+﻿syntax = "proto3";
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/duration.proto";
+import "google/protobuf/timestamp.proto";
+import "utilities.proto";
+// User defined data types and enumerations
+message OptionTypes{
+	enum Options{
+		CALL = 0;
+		PUT = 1;
+	}
+	Options CallOrPut = 1;
+}
+message Interval{
+	enum Options{
+		DAILY = 0;
+		WEEKLY = 1;
+		MONTHLY = 2;
+	}
+	Options BarIntervalOption = 1;
+}
+message TickTypes{
+    enum Ticks{
+		TRADE = 0;
+		BID = 1;
+		ASK = 2;
+		REGIONAL_BID = 3;
+		REGIONAL_ASK = 4;
+		DELETED = 11;
+		INSERTED = 12;
+		IRREGULAR_DELETE = 44;
+		FORM_T_TRADE = 32;
+	}
+	Ticks TickOption = 1;
+}
+
+message CommonBarsFields{
+	repeated int32 AcVol1 = 2;
+	int32 Count = 3;
+	repeated Price High1 = 4;
+	repeated Price Low1 = 5;
+	repeated Price OpenPrc = 6;
+	repeated Price Settle = 7;
+	repeated google.protobuf.Timestamp TrdDate = 8;
+}
+// Daily - Request, Response
+message DailyWeeklyMonthlyBarsRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+	Interval Interim = 3;
+	google.protobuf.Timestamp StopDate = 4;
+	google.protobuf.Int32Value DaysBack = 5;
+	google.protobuf.Int32Value RequestId = 6;
+	bool Request = 7;
+	bool Advise = 8;
+}
+message DailyWeeklyMonthlyBarsResponse{
+	CommonBarsFields BarFields = 1;
+	string DispName = 2;
+	ServerAcknowledgement Acknowledgement = 3;
+}
+
+// Intraday - Request, Response
+message IntradayBarsRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+	int32 BarInterval = 3;
+	int32 DaysBack = 4;
+	bool StartAtMidnight = 5;
+	google.protobuf.Timestamp Date = 6;
+	google.protobuf.Duration StartTime = 7;
+	google.protobuf.Duration StopTime = 8;
+	google.protobuf.Int32Value requestId = 9;
+	bool Request = 10;
+	bool Advise = 11;
+}
+message IntradayBarsResponse{
+	CommonBarsFields Bars = 1; 
+	repeated string TrdTim1 = 2;
+	ServerAcknowledgement Acknowledgement = 3;
+}
+
+// Live Quote: Options Symbology Request, Response
+message OptionSymbolFromDescriptionRequest{
+	string UserToken = 1;
+	string Root = 2;
+	string Expiration = 3;
+	OptionTypes OptionType = 4;
+	double StrikePrice = 5;
+}
+message OptionSymbolFromDescriptionResponse{
+	string Symbol = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+message DescriptionFromOptionSymbolRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+}
+message DescriptionFromOptionSymbolResponse{
+	string Root = 1;
+	string Expiration = 2;
+	OptionTypes OptionType = 3;
+	double StrikePrice = 4;
+	ServerAcknowledgement Acknowledgement = 5;
+}
+
+// Live Quote: Level 1 Data Request, Response
+message Level1MarketDataRequest{
+	string UserToken = 1;
+	repeated string Symbols = 2;
+	repeated string RegionalExchangeIds = 3;
+	bool Request = 4;
+	bool Advise = 5;
+}
+message Level1MarketDataResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	string DispName = 2;
+	Price Trdprc1 = 3;
+	google.protobuf.Duration Trdtim1 = 4;
+	string SymbolDesc =5;
+	string CompanyName = 6;
+	//string BidTick2 = 7;
+	google.protobuf.Int32Value ArcaImbalanceVolume = 8;
+	google.protobuf.Int32Value ArcaMatchVolume = 9;
+	google.protobuf.Int32Value SaleConditionVolume = 10;
+	google.protobuf.Int32Value IntradayHighCount = 11;
+	google.protobuf.Int32Value VwapVol = 12;
+	google.protobuf.DoubleValue Vwap = 13;
+	//Price LrpBid = 14;
+	Price Bid = 15;
+	//Price LrpAsk = 16;
+	Price Ask = 17;
+	Price ChangeLast = 18;
+	Price High1 = 19;
+	Price High52 = 20;
+	Price Low1 = 21;
+	Price Low52 = 22;
+	map<string, string> ExtendedFields = 23;
+}
+
+message UnSubscribeLevel1DataRequest{
+	string UserToken = 1;
+}
+
+message UnSubscribeLevel1DataResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message AddSymbolsRequest{
+	string UserToken = 1;
+	repeated string Symbols = 2;
+	string MarketDataLevel = 3;
+}
+
+message AddSymbolsResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+message RemoveSymbolsRequest{
+	string UserToken = 1;
+	repeated string Symbols = 2;
+	string MarketDataLevel = 3;
+}
+
+message RemoveSymbolsResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+// Market Makers: Level 2 Data Request, Response
+message Level2MarketDataRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+	google.protobuf.Int32Value RequestId = 3;
+	repeated string MarketSource = 4;
+	bool Request = 5;
+	bool Advise = 6;
+}
+message Level2MarketDataResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	string MktSource = 2;
+	string MktMkrId = 3;
+	string DispName = 4;
+	string MktMkrStatus = 5;
+	string ExchName = 6;
+	string MktMkrDisplay = 7;
+	google.protobuf.Int32Value MktMkrBidsize = 8;
+	google.protobuf.Int32Value MktMkrAsksize = 9;
+	google.protobuf.Int32Value SymbolId = 10;
+	google.protobuf.Int32Value SymbolError = 11;
+	google.protobuf.Int32Value TableId = 12;
+	google.protobuf.Int32Value Styp = 13;
+	google.protobuf.Int32Value QuoteUpdateType = 14;
+	google.protobuf.Timestamp MktMkrDate = 15;
+	google.protobuf.Duration MktMkrBidTime = 16;
+	google.protobuf.Duration MktMkrAskTime = 17;
+	Price MktMkrBid = 18;
+	Price MktMkrChangeLastAsk = 19;
+	Price MktMkrAsk = 20;
+}
+
+message UnSubscribeLevel2DataRequest{
+	string UserToken = 1;
+}
+
+message UnSubscribeLevel2DataResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+// Quote Chain: Request, Response
+message OptionChainRequest{
+	string UserToken = 1;
+	string SymbolRoot = 2;
+	google.protobuf.Int32Value RequestId = 3;
+	bool Request = 4;
+	bool Advise = 5;
+}
+message QuoteChainResponse{
+	string DispName = 2;
+	string ExchName = 3;
+	string SymbolDesc = 4;
+	string TrdUnits = 5;
+	string CommodityName = 6;
+	google.protobuf.Int32Value Styp = 7;
+	google.protobuf.Int32Value Session = 8;
+	google.protobuf.Int32Value Minmove= 9;
+	google.protobuf.DoubleValue Basisvalue = 10;
+}
+message OptionChainResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated QuoteChainResponse Derivative = 2;
+}
+
+// SymInfo: Request, Response
+message SymbolReferenceDataRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+	bool Request = 3;
+	bool Advise = 4;
+}
+message SymInfoResponse{
+	google.protobuf.Int32Value Styp = 1;
+	string DispName = 2;
+	string BloombergCode = 3;
+	string BloombergCodeFull = 4;
+	string BloombergCodeComposite = 5;
+	string ExchName = 6;
+	string SymbolDesc = 7;
+}
+message SymbolReferenceDataResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated SymInfoResponse SymInfoList = 2;
+}
+
+// Ticks: Request, Response
+message TickDataRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+	google.protobuf.Timestamp Date = 3;
+	google.protobuf.Duration StartTime = 4;
+	google.protobuf.Duration StopTime = 5;
+	google.protobuf.Int32Value RequestId = 6;
+	repeated TickTypes TickTypes = 7;
+	bool Request = 8;
+	bool Advise = 9;
+}
+message TicksResponse{
+	repeated Price TrdPrc1 = 2;
+	repeated google.protobuf.Timestamp TrdDate = 3;
+	repeated int32 TickType = 4;
+	repeated string TrdXid1 = 5;
+	repeated int32 TrdVol1 = 6;
+	repeated google.protobuf.Duration TrdTim1 = 7;
+	repeated string DispName = 8;
+	int32 Count = 9;
+}
+message TickDataResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated TicksResponse TickInfo = 2;
+}
+
+// Option Server: Request, Response
+message OptionsAndGreekDataRequest{
+	string UserToken = 1;
+	repeated string Symbols = 2;
+	bool Request = 3;
+	bool Advise = 4;
+}
+message OptionCalculationResponse{
+	google.protobuf.Int32Value Model = 1;
+	google.protobuf.DoubleValue Theta = 2;
+	google.protobuf.DoubleValue Gamma = 3;
+	google.protobuf.DoubleValue Vega = 4;
+	google.protobuf.DoubleValue Delta = 5;
+	google.protobuf.DoubleValue Premium = 6;
+	google.protobuf.DoubleValue ImpliedVol = 7;
+	google.protobuf.DoubleValue DividendAmout6 = 8;
+	google.protobuf.DoubleValue DividendAmout5 = 9;
+	google.protobuf.DoubleValue DividendAmout4 = 10;
+	google.protobuf.DoubleValue DividendAmout3 = 11;
+	google.protobuf.DoubleValue DividendAmout2 = 12;
+	google.protobuf.DoubleValue DividendAmout1 = 13;
+	google.protobuf.DoubleValue Rate = 14;
+	google.protobuf.DoubleValue TimeToExpire =15;
+	Price UnderlierPrice = 16;
+	Price OriginalPrice = 17;
+	Price StrikePrice = 18;
+	google.protobuf.Timestamp DividendDate6 = 19;
+	google.protobuf.Timestamp DividendDate5 = 20;
+	google.protobuf.Timestamp DividendDate4 = 21;
+	google.protobuf.Timestamp DividendDate3 = 22;
+	google.protobuf.Timestamp DividendDate2 = 23;
+	google.protobuf.Timestamp DividendDate1 = 24;
+	string PutCallId = 25;
+	string DispName = 26;
+	string UnderSym = 27;
+	string OptionRoot = 28;
+}
+message OptionsAndGreekDataResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated OptionCalculationResponse OptionsList = 2;
+}
+
+// SecurityInfo: Request, Response
+message SecurityDataRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+}
+message SecurityData{
+	google.protobuf.Timestamp Divpaydate = 1;
+	google.protobuf.Timestamp Exdivdate = 2;
+	google.protobuf.Timestamp High52Date = 3;
+	google.protobuf.Timestamp Low52Date = 4;
+	google.protobuf.Timestamp ProcDate = 5;
+	google.protobuf.Timestamp SplitDate1 = 6;
+	google.protobuf.DoubleValue Adx14d1d = 7;
+	google.protobuf.DoubleValue BollingerLower21d1d = 8;
+	google.protobuf.DoubleValue BollingerUpper21d1d = 9;
+	google.protobuf.DoubleValue Close10davg1d = 10;
+	google.protobuf.DoubleValue Close200davg1d = 11;
+	google.protobuf.DoubleValue Close20davg1d = 12;
+	google.protobuf.DoubleValue Close50davg1d = 13;
+	google.protobuf.DoubleValue Close5davg1d = 14;
+	google.protobuf.DoubleValue High15dmax1d = 15;
+	google.protobuf.DoubleValue Hlvolatility10d1d = 16;
+	google.protobuf.DoubleValue Low15dmin1d = 17;
+	google.protobuf.DoubleValue Minusdi14d1d = 18;
+	google.protobuf.DoubleValue Plusdi14d1d = 19;
+	google.protobuf.DoubleValue Rsi14d1d = 20;
+	google.protobuf.DoubleValue Rsi25d1d = 21;
+	google.protobuf.DoubleValue Rsi9d1d = 22;
+	google.protobuf.DoubleValue SplitFactor1 = 23;
+	google.protobuf.DoubleValue Volume10davg1d = 24;
+	google.protobuf.DoubleValue Volume200davg1d = 25;
+	google.protobuf.DoubleValue Volume20davg1d = 26;
+	google.protobuf.DoubleValue Volume50davg1d = 27;
+	google.protobuf.DoubleValue Volume5davg1d = 28;
+	google.protobuf.Int32Value DividendFreqN = 29;
+	google.protobuf.Int32Value SecurityCategory = 30;
+	google.protobuf.Int32Value SharesOut = 31;
+	Price Beta = 32;
+	Price Dividend = 33;
+	Price DividendRate = 34;
+	Price DividendYield = 35;
+	Price Earnings = 36;
+	Price High52 = 37;
+	Price Low52 = 38;
+	Price MgSicm = 39;
+	Price MktCap = 40;
+	Price Peratio = 41;
+	string BloombergCode = 42;
+	string BloombergCodeComposite = 43;
+	string CompanyName = 44;
+	string Country = 45;
+	string Cusip = 46;
+	string DispName = 47;
+	string GicsIndustry = 48;
+	string GicsSector = 49;
+	string GicsSubindustry = 50;
+	string IsinNo = 51;
+	string IssuersSectorStr = 52;
+	string PrimaryExchange = 53;
+	string RicCode = 54;
+	string Sedol = 55;
+}
+message SecurityDataResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated SecurityData SecurityInfoList = 2;
+}
+
+message SymbolData{
+	string DispName = 1;
+	string ExchName = 2;
+	google.protobuf.Int32Value Styp = 3;
+	string SymbolDesc = 4;
+	string IsinNo = 5;
+	string Country = 6;
+	string CommodityName = 7;
+	string BloombergCode = 8;
+	string BloombergCodeFull = 9;
+	string BloombergCodeComposite = 10;
+	string RicCode = 11;
+	string Sedol = 12;
+	string GicsSector = 13;
+	string GicsIndustry = 14;
+	string GicsSubindustry = 15;
+	string Cusip = 16;
+}
+message SymbolsFromCompanyNameRequest{
+	string UserToken = 1;
+	string CompanyName = 2;
+}
+
+message SymbolsFromCompanyNameResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated SymbolData SymbolDatalist = 2;
+}
+
+message AlternateSymbology{
+	enum Symbology{
+		ISIN = 0;
+		SEDOL = 1;
+		RIC = 2;
+		CUSIP = 3;
+		BBG = 4;
+	}
+	Symbology SymbolOption = 1;
+}
+
+message SymbolFromAlternateSymbologyRequest{
+	string UserToken = 1;
+	string Symbol = 2; 
+	AlternateSymbology SymbolInfo = 3;
+}
+
+message SymbolFromAlternateSymbologyResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated SymbolData SymbolInfolist = 2;
+}
+
+service MarketDataService{
+	rpc GetDailyWeeklyMonthlyBars (DailyWeeklyMonthlyBarsRequest) returns (DailyWeeklyMonthlyBarsResponse);
+	rpc GetIntradayBars (IntradayBarsRequest) returns (IntradayBarsResponse);
+	rpc GetOptionChainForUnderlier (OptionChainRequest) returns (OptionChainResponse);
+	rpc GetSymbolReferenceData (SymbolReferenceDataRequest) returns (SymbolReferenceDataResponse);
+	rpc GetTickData (TickDataRequest) returns (TickDataResponse);
+	rpc GetOptionsAndGreekData (OptionsAndGreekDataRequest) returns (OptionsAndGreekDataResponse);
+	rpc GetSecurityData (SecurityDataRequest) returns (SecurityDataResponse);
+	rpc GetOptionSymbolFromDescription (OptionSymbolFromDescriptionRequest) returns (OptionSymbolFromDescriptionResponse);
+	rpc GetDescriptionFromOptionSymbol (DescriptionFromOptionSymbolRequest) returns (DescriptionFromOptionSymbolResponse);
+	rpc SubscribeLevel1Ticks (Level1MarketDataRequest) returns (stream Level1MarketDataResponse);
+	rpc UnSubscribeLevel1Data (UnSubscribeLevel1DataRequest) returns (UnSubscribeLevel1DataResponse);
+	rpc SubscribeLevel2Ticks (Level2MarketDataRequest) returns (stream Level2MarketDataResponse);
+	rpc UnSubscribeLevel2Data (UnSubscribeLevel2DataRequest) returns (UnSubscribeLevel2DataResponse);
+	rpc AddSymbols (AddSymbolsRequest) returns (AddSymbolsResponse);
+	rpc RemoveSymbols (RemoveSymbolsRequest) returns (RemoveSymbolsResponse);
+	rpc GetSymbolsFromCompanyName (SymbolsFromCompanyNameRequest) returns (SymbolsFromCompanyNameResponse);
+	rpc GetSymbolFromAlternateSymbology(SymbolFromAlternateSymbologyRequest) returns (SymbolFromAlternateSymbologyResponse);
+}
