@@ -43,7 +43,7 @@ You can execute the following commands in the Anaconda Prompt to compile the *pr
     python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/market_data.proto
 
 The compiler generates six (6) new files: 
-- Three (3) *_py2.py* files containing the request and response classes
+- Three (3) *_pb2.py* files containing the request and response classes
 - Three (3) *_pb2_grpc.py* containing client and server classes.
 
 You now are ready to write Python code to interact with the xAPI system!
