@@ -56,7 +56,7 @@ When you're ready, you can execute the code directly in Anaconda Prompt by invok
 
     python tutorial_1_connect_and_disconnet.py
 
-If you don't already have one installed, there are a number of excellent Python Integrated Development Envionrments (IDEs) available, such as [Visual Studio Code (VSCode)](https://code.visualstudio.com/) and [PyCharm](https://www.jetbrains.com/pycharm/). 
+If you don't already have one installed, there are a number of excellent Python Integrated Development Environments (IDEs) available, such as [Visual Studio Code (VSCode)](https://code.visualstudio.com/) and [PyCharm](https://www.jetbrains.com/pycharm/). 
 
 ## Tutorial 1: Connecting and Disconnecting
 
@@ -68,7 +68,7 @@ To access the xAPI Utility interfaces, import the utility modules generated abov
     import utilities_pb2 as util
     import utilities_pb2_grpc as util_grpc
 
-Next, create a stub to gain access to the remote **Utility** interfaces. xAPI requires Transport Layer Security (TLS), so you must establish an encrypted connection. You can use this [roots.pem](https://pki.google.com/roots.pem) file distributed by Google, which is also included in our xAPI respository.
+Next, create a stub to gain access to the remote **Utility** interfaces. xAPI requires Transport Layer Security (TLS), so you must establish an encrypted connection. You can use this [roots.pem](https://pki.google.com/roots.pem) file distributed by Google, which is also included in our xAPI repository.
 
     with open(r'.\roots.pem', 'rb') as f: cert = f.read()
     channel = grpc.secure_channel('SERVER:PORT', grpc.ssl_channel_credentials(root_certificates=cert))
@@ -91,8 +91,11 @@ Finally, verify the login succeeded and disconnect from the server:
 
 You've now connected, authenticated, and disconnected from the server using xAPI.
 
+> **Note**: xAPI supports Secure Remote Password ([SRP](http://srp.stanford.edu/)) protocol. See this [example](./examples/srp_connect.py) for details.
+
+
 ## Tutorial 2: Placing an Order
-Now that you can connect and disconnect, let's look at placing an order. 
+Now that you can connect and disconnect, let's look at placing an order.
 
 To access the xAPI Order interfaces, import the order modules generated above.
 
@@ -195,7 +198,7 @@ Define a new function to process market data returned by the server:
     	for tick in response:
     		if tick.Trdprc1.DecimalValue == 0.0:
     			continue
-    		print('Receieved market data for {0}, Last: {1}'.format(tick.DispName, tick.Trdprc1.DecimalValue))
+    		print('Received market data for {0}, Last: {1}'.format(tick.DispName, tick.Trdprc1.DecimalValue))
 	    except  Exception  as e:
     	print(e)
 
@@ -209,14 +212,14 @@ Moving on to the main application thread, create a stub to gain access to the re
 
     md_stub = md_grpc.MarketDataServiceStub(channel)
 
-Next, request market data from the server. You can request data for one or more securites at a time:
+Next, request market data from the server. You can request data for one or more securities at a time:
 
     response = md_stub.SubscribeLevel1Ticks(md.Level1MarketDataRequest(Symbols=['TSLA'], Request=True, Advise=True, UserToken=connect_response.UserToken))
 
 > **Note:**
 >If you want a snapshot of the market data (i.e., the current values), set the *Request* parameter to *True*. 
 >
->If you want to receieve all subsequent market ticks (i.e., get future market data updates), set the *Advise* parameter to *True*.
+>If you want to receive all subsequent market ticks (i.e., get future market data updates), set the *Advise* parameter to *True*.
 
 Next, create and start the data handler thread and pass the iterable response object to the thread function:
 
