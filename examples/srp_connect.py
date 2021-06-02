@@ -13,7 +13,7 @@ util_stub = util_grpc.UtilityServicesStub(channel)
 
 req = util.StartLoginSrpRequest(UserName=__USER__, Domain=__DOMAIN__)
 srp_start_response = util_stub.StartLoginSrp(req)
-print('Connect result: ', srp_start_response.Response)
+print('Start SRP result: ', srp_start_response.Response)
 
 if srp_start_response.Response == 'success':
     identity = '{0}@{1}'.format(__USER__, __DOMAIN__)

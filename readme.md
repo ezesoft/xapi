@@ -18,7 +18,7 @@ If you do not have Python installed, [Anaconda](https://www.anaconda.com/) is ea
     conda activate xapi
     conda install grpcio grpcio-tools pandas
 
-> **Tip**: When you open an Anaconda Prompt, you can return to the xapi environment with the `conda activate xapi` command 
+> **Tip**: When you open an Anaconda Prompt, you can return to the xapi environment with the `conda activate xapi` command
 
 Next, clone the xAPI repo to download the latest proto files:
 
@@ -42,7 +42,7 @@ You can execute the following commands in the Anaconda Prompt to compile the *pr
     
     python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/market_data.proto
 
-The compiler generates six (6) new files: 
+The compiler generates six (6) new files:
 - Three (3) *_pb2.py* files containing the request and response classes
 - Three (3) *_pb2_grpc.py* containing client and server classes.
 
@@ -56,7 +56,7 @@ When you're ready, you can execute the code directly in Anaconda Prompt by invok
 
     python tutorial_1_connect_and_disconnet.py
 
-If you don't already have one installed, there are a number of excellent Python Integrated Development Environments (IDEs) available, such as [Visual Studio Code (VSCode)](https://code.visualstudio.com/) and [PyCharm](https://www.jetbrains.com/pycharm/). 
+If you don't already have one installed, there are a number of excellent Python Integrated Development Environments (IDEs) available, such as [Visual Studio Code (VSCode)](https://code.visualstudio.com/) and [PyCharm](https://www.jetbrains.com/pycharm/).
 
 ## Tutorial 1: Connecting and Disconnecting
 
@@ -111,14 +111,14 @@ Finally, submit the order request:
     order_response = ord_stub.SubmitSingleOrder(ord.SubmitSingleOrderRequest(Symbol='TSLA', Side='BUY', Quantity=5000, Route='ROUTE', Account='ACCOUNT', OrderTag='MyOrderId', UserToken=connect_response.UserToken))
     print('Order result: ', order_response)
 
-> **Note**: Route and Account information will be provided by your representative. 
+> **Note**: Route and Account information will be provided by your representative.
 
-> **Important**: When submitting an order, populate the OrderTag property with a unique identifier so you can match an order event from xAPI with an order in your system. 
+> **Important**: When submitting an order, populate the OrderTag property with a unique identifier so you can match an order event from xAPI with an order in your system.
 
 Well done, you've now placed an order via xAPI.
 
 ## Tutorial 3: Getting Order Details
-With an order placed, let's request order activity from xAPI to see the status and details of the order. xAPI offers both a unary, request-response and a streaming interface to retrieve order activity. Order activity includes orders you submitted to the system as well as activity on the order, such as executions (fills) or rejections. 
+With an order placed, let's request order activity from xAPI to see the status and details of the order. xAPI offers both a unary, request-response and a streaming interface to retrieve order activity. Order activity includes orders you submitted to the system as well as activity on the order, such as executions (fills) or rejections.
 
 This tutorial provides an example of the unary *GetTodaysActivityJson* interface which returns details in a pandas-friendly JSON format.
 
@@ -141,14 +141,14 @@ In the previous *Placing an Order* tutorial, an OrderTag was provided on the req
 
     xapi_order_id = df[(df['OrderTag']=='MyOrderId')]['OrderId'][0]
     print('The xAPI OrderId for my order is ', xapi_order_id)
-    
+
 > **Tip**: Use the xAPI OrderId to cancel and modify existing orders.
 
 Now you can not only log-in and place orders, but retrieve the orders' details too!
 
 ## Tutorial 4: Getting Execution Details
 Building on the Get Order Details tutorial, you can use the same interface to retrieve order execution details from xAPI by changing the filter.
- 
+
 Let's request fill activity from xAPI while adding a single filter *IncludeExchangeTradeOrder*.
 
     activity_response = util_stub.GetTodaysActivityJson(util.TodaysActivityJsonRequest(IncludeExchangeTradeOrder=True, UserToken=connect_response.UserToken))
@@ -161,7 +161,7 @@ Finally, the following pandas aggregation will give you a summary of:
 - Total filled volume
 - Number of fills
 - VWAP for each security with fills
-<!-- end of list--> 
+<!-- end of list-->
 
     if not df.empty:
 	    g = df.groupby(["Symbol", "Side"]).agg( tot_filled_vol = pd.NamedAgg('Volume', 'sum'), num_fills = pd.NamedAgg('Volume', 'count'), vwap = pd.NamedAgg('Price', lambda x: np.average(x, weights=df.loc[x.index, 'Volume'])))
@@ -180,6 +180,7 @@ In the *Getting Order Details* tutorial, you retrieved the xAPI *OrderId* of an 
     print('Cancel result: ', cancel_response)
 
 It's that simple - the order is cancelled!
+
 ## Tutorial 6: Subscribing to Market Data
 Along with manipulating your own orders, you can use xAPI to retrieve market data. You can both request a market data snapshot as well as subscribe to future market data updates. This tutorial covers both the snapshot and streaming cases for Level 1 market data.
 
@@ -202,9 +203,9 @@ Define a new function to process market data returned by the server:
 	    except  Exception  as e:
     	print(e)
 
-There are some important elements in this code block worth calling out. 
+There are some important elements in this code block worth calling out.
 
-First, note the exception handling - this function is running on a separate thread. When the main application thread tells xAPI to cancel the stream, gRPC deliberately throws an exception to break out of the blocking call. This exception should be handled by your code. 
+First, note the exception handling - this function is running on a separate thread. When the main application thread tells xAPI to cancel the stream, gRPC deliberately throws an exception to break out of the blocking call. This exception should be handled by your code.
 
 Second, notice the *response* variable. This is a gRPC result object which is iterable using the standard Python *for*, *list*, or *next* syntax. When you attempt to iterate this object, it will block until data is available from the server.
 
@@ -217,7 +218,7 @@ Next, request market data from the server. You can request data for one or more 
     response = md_stub.SubscribeLevel1Ticks(md.Level1MarketDataRequest(Symbols=['TSLA'], Request=True, Advise=True, UserToken=connect_response.UserToken))
 
 > **Note:**
->If you want a snapshot of the market data (i.e., the current values), set the *Request* parameter to *True*. 
+>If you want a snapshot of the market data (i.e., the current values), set the *Request* parameter to *True*.
 >
 >If you want to receive all subsequent market ticks (i.e., get future market data updates), set the *Advise* parameter to *True*.
 
@@ -232,6 +233,8 @@ At this point, your main application thread is free to do other work. When you a
     t.join()
 
 Great! You now have market data information!
+
+> **Note**: You can also subscribe to order updates. See this [example](./examples/subscribe_order_info.py) for details.
 
 ## Tutorial Wrap-Up
 Congratulations! You now have the foundation to start building your own custom Eze EMS integrations using Python and xAPI.
