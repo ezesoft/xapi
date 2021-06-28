@@ -30,6 +30,8 @@ Next, use the Protocol Buffers compiler to generate native Python xAPI interface
  2. *order.proto*: Order management interfaces for creating and cancelling orders
  3. *market_data.proto*: Interfaces for retrieving market data
 
+> **Note**: If you want to see the definition for all available APIs, including all input and output parameters, look in .proto files.
+
 In Anaconda Prompt, navigate to the tutorials folder
 
     cd xapi/tutorials
