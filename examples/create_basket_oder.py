@@ -1,5 +1,6 @@
 import grpc
 import time
+from uuid import uuid4
 from threading import Thread
 import utilities_pb2 as util
 import utilities_pb2_grpc as util_grpc
@@ -7,7 +8,7 @@ import order_pb2 as ord
 import order_pb2_grpc as ord_grpc
 
 
-class SubscribeOrderInfoExample:
+class CreateBasketOrderExample:
     def __init__(self):
         self.password = '__PASSWORD__'
         self.server = '__SERVER__'
@@ -50,17 +51,46 @@ class SubscribeOrderInfoExample:
             t = Thread(target=self.callback, args=(iter, ))
             t.start()
 
-            for i in range(1, 10):
-                print('Sending order from main thread: ', i)
-                req = ord.SubmitSingleOrderRequest(Symbol='GOOG', Side='BUY',
-                                                   Quantity=i*100,
-                                                   Route=self.route,
-                                                   Account=self.account,
-                                                   OrderTag='MyOrderId',
-                                                   UserToken=token)
-                order_response = ord_stub.SubmitSingleOrder(req)
-                print('Send order result: ', order_response)
-                time.sleep(1)
+            # Place multiple orders in 1 request
+            account = self.account.split(';')
+
+            ord_request  = ord.OrderRow()
+            ord_request.DispName = 'GOOG'
+            ord_request.Buyorsell = 'BUY'
+            ord_request.Volume.value = 1000
+            ord_request.Bank = account[0]
+            ord_request.Branch = account[1]
+            ord_request.Customer = account[2]
+            ord_request.Deposit = account[3]
+            ord_request.GoodUntil = 'DAY'
+            ord_request.Type = 'UserSubmitOrder'
+            ord_request.Route = self.route
+            ord_request.ExtendedFields['ORDER_TAG'] = 'XAP-{0}'.format(str(uuid4()))
+
+            ord_request1 = ord.OrderRow()
+            ord_request.DispName = 'MSFT'
+            ord_request.Buyorsell = 'BUY'
+            ord_request.Volume.value = 1000
+            ord_request.Bank = account[0]
+            ord_request.Branch = account[1]
+            ord_request.Customer = account[2]
+            ord_request.Deposit = account[3]
+            ord_request.GoodUntil = 'DAY'
+            ord_request.Type = 'UserSubmitOrder'
+            ord_request.Route = self.route
+            ord_request.ExtendedFields['ORDER_TAG'] = 'XAP-{0}'.format(str(uuid4()))
+            
+            basket_order = ord.BasketOrderRequest()
+            basket_order.Orders.extend([ord_request, ord_request1])  
+            basket_order.UserToken = token
+            response = ord_stub.SubmitBasketOrder(basket_order)
+
+            if response.ServerResponse == 'success':
+                print("Successfully Submitted Basket Order")
+            else: 
+                print(response.OptionalFields["ErrorMessage"]) 
+
+            time.sleep(10)
 
             iter.cancel()
             t.join()
@@ -71,5 +101,5 @@ class SubscribeOrderInfoExample:
 
 
 if __name__ == "__main__":
-    example = SubscribeOrderInfoExample()
+    example = CreateBasketOrderExample()
     example.run()
