@@ -188,7 +188,7 @@ Along with manipulating your own orders, you can use xAPI to retrieve market dat
 
 > **Tip:** While this is little different from the previous tutorials, the basics remain the same, and builds on what you've done up to this point.
 
-​To access the xAPI Market Data interfaces, import the market_data modules generated during the **Installation**. Since gRPC streaming is a blocking operation, data coming from the server should to be processed on a separate thread so your application is not blocked. To do this, include the threading module as well.
+​To access the xAPI Market Data interfaces, import the market_data modules generated during the **Installation**. Since gRPC streaming is a blocking operation, data coming from the server should be processed on a separate thread so your application is not blocked. To do this, include the threading module as well.
 
     from threading import Thread
     import market_data_pb2 as md
