@@ -1,5 +1,6 @@
 ﻿syntax = "proto3";
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 message ServerAcknowledgement{
 	string ServerResponse = 1;
@@ -124,17 +125,24 @@ message OrderResponse{
 	string CurrentStatus = 9;
 	string TraderId =10;
 	string ClaimedByClerk = 11;
-	string Volume = 12;
-	string Price = 13;
-	string PriceType = 14;
+	int32 Volume = 12;
+	google.protobuf.DoubleValue Price = 13;
+	PriceTypeEnum PriceType = 14;
 	string Buyorsell = 15;
-	string BOOKING_TYPE = 16;
-	string MIFID_IDM = 17;
-	string REF_MGR_NOTES = 18;
 	string PairSpreadType = 19;
 	string Reason = 20;
 	string TimeStamp = 21;
 	map<string, string> ExtendedFields = 22;
+	google.protobuf.Timestamp GoodFrom = 23;
+	ExpirationType TimeInForce = 24;
+	google.protobuf.DoubleValue StopPrice = 25;
+	string UserMessage = 26;
+	google.protobuf.Timestamp ExpirationDate = 27;
+	string Side = 28;
+	string Route = 29;
+	string Account = 30;
+	string OrderTag = 31;
+	int32 VolumeTraded = 32;
 }
 
 message DepositRow{
@@ -338,6 +346,31 @@ message TodaysActivityJsonRequest{
 message TodaysActivityJsonResponse{
 	string TodaysActivityJson = 1;
 	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message ExpirationType{
+	enum ExpirationTypes{
+		DAY = 0;
+		GTC = 1;
+		GTX = 2;
+		CLO = 3;
+		OPG = 4;
+		IOC = 5;
+		GTD = 6;
+		OTHER = 7;
+	}
+	ExpirationTypes Expiration = 1;
+}
+
+message PriceTypeEnum{
+	enum PriceTypesEnum{
+		Market = 0;
+		Limit = 1;
+		StopMarket = 2;
+		StopLimit = 3;
+		Other = 4;
+	}
+	PriceTypesEnum PriceType = 1;
 }
 
 service UtilityServices{

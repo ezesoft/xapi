@@ -16,6 +16,13 @@ message SubmitSingleOrderRequest{
 	bool Staged = 9;
 	bool ClaimRequire = 10;
 	string UserToken = 11;
+	google.protobuf.Timestamp GoodFrom = 12;
+	ExpirationType TimeInForce = 13;
+	PriceTypeEnum PriceType = 14;
+	google.protobuf.DoubleValue Price = 15;
+	google.protobuf.DoubleValue StopPrice = 16;
+	string UserMessage = 17;
+	google.protobuf.Timestamp ExpirationDate = 18;
 }
 
 message SubmitSingleOrderResponse{
@@ -28,6 +35,14 @@ message ChangeSingleOrderRequest{
 	int32 Quantity = 2;
 	map<string, string> ExtendedFields = 3;
 	string UserToken = 4;
+	google.protobuf.Timestamp GoodFrom = 5;
+	ExpirationType TimeInForce = 6;
+	PriceTypeEnum PriceType = 7;
+	google.protobuf.DoubleValue Price = 8;
+	google.protobuf.DoubleValue StopPrice = 9;
+	string UserMessage = 10;
+	google.protobuf.Timestamp ExpirationDate = 11;
+	string OrderTag = 12;
 }
 
 message ChangeSingleOrderResponse{
@@ -128,17 +143,24 @@ message SubscribeOrderInfoResponse{
 	string CurrentStatus = 9;
 	string TraderId =10;
 	string ClaimedByClerk = 11;
-	string Volume = 12;
-	string Price = 13;
-	string PriceType = 14;
+	int32 Volume = 12;
+	google.protobuf.DoubleValue Price = 13;
+	PriceTypeEnum PriceType = 14;
 	string Buyorsell = 15;
-	string BOOKING_TYPE = 16;
-	string MIFID_IDM = 17;
-	string REF_MGR_NOTES = 18;
 	string PairSpreadType = 19;
 	string Reason = 20;
 	string TimeStamp = 21;
 	map<string, string> ExtendedFields = 22;
+	google.protobuf.Timestamp GoodFrom = 23;
+	ExpirationType TimeInForce = 24;
+	google.protobuf.DoubleValue StopPrice = 25;
+	string UserMessage = 26;
+	google.protobuf.Timestamp ExpirationDate = 27;
+	string Side = 28;
+	string Route = 29;
+	string Account = 30;
+	string OrderTag = 31;
+	int32 VolumeTraded = 32;
 }
 
 message UserAccountsRequest{
@@ -324,6 +346,45 @@ message SubmitTradeReportResponse{
 	map<string, string> OptionalFields = 2;
 }
 
+message OrderInfoFilters{
+	bool IncludeOrders = 1;
+	bool IncludeExecutions = 2;
+}
+
+message SubscribeOrderInfoJsonRequest{
+	string UserToken = 1;
+	OrderInfoFilters Filters = 2;
+}
+
+message SubscribeOrderInfoJsonResponse{
+	string OrderInfoJson = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message OrderDetailByOrderIdJsonRequest{
+	string UserToken = 1;
+	string OrderId = 2;
+}
+
+message OrderDetailByOrderIdJsonResponse{
+	string OrderDetail = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message OrderDetailByDateRangeJsonRequest{
+	string UserToken = 1;
+	google.protobuf.Timestamp StartDate = 2;
+	google.protobuf.Duration StartTime = 3;
+	google.protobuf.Timestamp EndDate = 4;
+	google.protobuf.Duration EndTime = 5;
+	int32 TimeoutInSeconds = 6;
+}
+
+message OrderDetailByDateRangeJsonResponse{
+	string OrderDetail = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
 service SubmitOrderService{
 	rpc SubmitSingleOrder (SubmitSingleOrderRequest) returns (SubmitSingleOrderResponse);
 	rpc SubmitPairOrder (SubmitPairOrderRequest) returns (SubmitPairOrderResponse);
@@ -337,4 +398,7 @@ service SubmitOrderService{
 	rpc SubscribeOrderInfo (SubscribeOrderInfoRequest) returns (stream SubscribeOrderInfoResponse);
 	rpc SubmitAllocationOrder (SubmitAllocationOrderRequest) returns (SubmitAllocationOrderResponse);
 	rpc SubmitTradeReport (SubmitTradeReportRequest) returns (SubmitTradeReportResponse);
+	rpc SubscribeOrderInfoJson (SubscribeOrderInfoJsonRequest) returns (stream SubscribeOrderInfoJsonResponse);
+	rpc GetOrderDetailByOrderIdJson (OrderDetailByOrderIdJsonRequest) returns (OrderDetailByOrderIdJsonResponse);
+	rpc GetOrderDetailByDateRangeJson (OrderDetailByDateRangeJsonRequest) returns (stream OrderDetailByDateRangeJsonResponse);
 }
