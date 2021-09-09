@@ -4,27 +4,43 @@ import utilities_pb2_grpc as util_grpc
 import order_pb2 as ord
 import order_pb2_grpc as ord_grpc
 import pandas as pd
-import numpy as np
 
-with open(r'.\roots.pem', 'rb') as f: cert = f.read()
 
-channel = grpc.secure_channel('__SERVER__:__PORT__', grpc.ssl_channel_credentials(root_certificates=cert))
-util_stub = util_grpc.UtilityServicesStub(channel)
+class CancelOrderExample:
+    def __init__(self):
+        self.server = '__SERVER__'
+        self.port = '__PORT__'
+        self.user = '__USER__'
+        self.password = '__PASSWORD__'
+        self.domain = '__DOMAIN__'
+        self.locale = '__LOCALE__'
+        self.my_order_id = 'MyOrderId'
 
-connect_response = util_stub.Connect(util.ConnectRequest(UserName='__USER__', Domain='__DOMAIN__', Password='__PASSWORD__', Locale='__LOCALE__'))
-print('Connect result: ', connect_response.Response)
+    def run(self):
+        with open(r'roots.pem', 'rb') as f:
+            cert = f.read()
 
-if connect_response.Response == 'success':
-    activity_response = util_stub.GetTodaysActivityJson(util.TodaysActivityJsonRequest(IncludeUserSubmitOrder=True, UserToken=connect_response.UserToken))
-    df = pd.read_json(activity_response.TodaysActivityJson, convert_dates=False)
+        channel = grpc.secure_channel('{0}:{1}'.format(self.server, self.port), grpc.ssl_channel_credentials(root_certificates=cert))
+        util_stub = util_grpc.UtilityServicesStub(channel)
 
-    if not df.empty:
-        xapi_order_id = df[(df['OrderTag']=='MyOrderId')]['OrderId'][0]
-        print('The xAPI OrderId for my order is ', xapi_order_id)
+        connect_response = util_stub.Connect(util.ConnectRequest(UserName=self.user, Domain=self.domain, Password=self.password, Locale=self.locale))
+        print('Connect result: ', connect_response.Response)
 
-        ord_stub = ord_grpc.SubmitOrderServiceStub(channel)
-        cancel_response = ord_stub.CancelSingleOrder(ord.CancelSingleOrderRequest(OrderId=xapi_order_id, UserToken=connect_response.UserToken))
-        print('Cancel result: ', cancel_response)
+        if connect_response.Response == 'success':
+            activity_response = util_stub.GetTodaysActivityJson(util.TodaysActivityJsonRequest(IncludeUserSubmitOrder=True, UserToken=connect_response.UserToken))
+            df = pd.read_json(activity_response.TodaysActivityJson, convert_dates=False)
 
-    disconnect_response = util_stub.Disconnect(util.DisconnectRequest(UserToken=connect_response.UserToken))
-    print('Disconnect result: ', disconnect_response.ServerResponse)
+            if not df.empty:
+                xapi_order_id = df.loc[(df['OrderTag'] == self.my_order_id).idxmax(), 'OrderId']
+                print('The xAPI OrderId for my order is ', xapi_order_id)
+
+                ord_stub = ord_grpc.SubmitOrderServiceStub(channel)
+                cancel_response = ord_stub.CancelSingleOrder(ord.CancelSingleOrderRequest(OrderId=xapi_order_id, UserToken=connect_response.UserToken))
+                print('Cancel result: ', cancel_response)
+
+            disconnect_response = util_stub.Disconnect(util.DisconnectRequest(UserToken=connect_response.UserToken))
+            print('Disconnect result: ', disconnect_response.ServerResponse)
+
+if __name__ == "__main__":
+    example = CancelOrderExample()
+    example.run()
