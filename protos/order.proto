@@ -129,6 +129,18 @@ message SubscribeOrderInfoRequest{
 	}
 	SubscriptionLevel Level = 1;
 	string UserToken = 2;
+	bool IncludeUserSubmitOrder = 3;
+	bool IncludeUserSubmitStagedOrder = 4;
+	bool IncludeUserSubmitCompoundOrder = 5;
+	bool IncludeForeignExecution = 6;
+	bool IncludeUserSubmitChange = 7;
+	bool IncludeUserSubmitCancel = 8;
+	bool IncludeExchangeAcceptOrder = 9;
+	bool IncludeExchangeTradeOrder = 10;
+	bool IncludeUserSubmitTradeReport = 11;
+	bool IncludeUserSubmitAllocation = 12;
+	bool IncludeUserSubmitAllocationEx = 13;
+	bool IncludeClerkReject = 14;
 }
 
 message SubscribeOrderInfoResponse{
@@ -311,7 +323,7 @@ message SubmitAllocationOrderRequest{
 	string SourceAccount = 4;
 	string TargetAccount = 5; //targetaccount
 	int32 TargetQuantity = 6; //tgQty
-	int32 TargetPrice = 7; //tgPrice
+	google.protobuf.DoubleValue TargetPrice = 7; //tgPrice
 	string UserToken = 8;
 	AllocationType TypeOfAllocation = 9;
 	OrderType OrderTypes = 10;

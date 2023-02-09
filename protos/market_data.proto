@@ -441,6 +441,37 @@ message SymbolFromAlternateSymbologyResponse{
 	repeated SymbolData SymbolInfolist = 2;
 }
 
+message Level1MarketDataRecord{
+	string DispName = 2;
+	Price Trdprc1 = 3;
+	google.protobuf.Duration Trdtim1 = 4;
+	string SymbolDesc =5;
+	string CompanyName = 6;
+	//string BidTick2 = 7;
+	google.protobuf.Int32Value ArcaImbalanceVolume = 8;
+	google.protobuf.Int32Value ArcaMatchVolume = 9;
+	google.protobuf.Int32Value SaleConditionVolume = 10;
+	google.protobuf.Int32Value IntradayHighCount = 11;
+	google.protobuf.Int32Value VwapVol = 12;
+	google.protobuf.DoubleValue Vwap = 13;
+	//Price LrpBid = 14;
+	Price Bid = 15;
+	//Price LrpAsk = 16;
+	Price Ask = 17;
+	Price ChangeLast = 18;
+	Price High1 = 19;
+	Price High52 = 20;
+	Price Low1 = 21;
+	Price Low52 = 22;
+	map<string, string> ExtendedFields = 23;
+}
+
+message Level1MarketDataRecordResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated Level1MarketDataRecord DataRecord= 2;
+}
+
+
 service MarketDataService{
 	rpc GetDailyWeeklyMonthlyBars (DailyWeeklyMonthlyBarsRequest) returns (DailyWeeklyMonthlyBarsResponse);
 	rpc GetIntradayBars (IntradayBarsRequest) returns (IntradayBarsResponse);
@@ -459,4 +490,5 @@ service MarketDataService{
 	rpc RemoveSymbols (RemoveSymbolsRequest) returns (RemoveSymbolsResponse);
 	rpc GetSymbolsFromCompanyName (SymbolsFromCompanyNameRequest) returns (SymbolsFromCompanyNameResponse);
 	rpc GetSymbolFromAlternateSymbology(SymbolFromAlternateSymbologyRequest) returns (SymbolFromAlternateSymbologyResponse);
+	rpc GetLevel1MarketData(Level1MarketDataRequest) returns (Level1MarketDataRecordResponse);
 }

@@ -208,6 +208,7 @@ message TodaysActivityRequest{
 	bool IncludeUserSubmitAllocation = 12;
 	bool IncludeUserSubmitAllocationEx = 13;
 	bool IncludeClerkReject = 14;
+	bool IncludeOnlyCompleted = 15;
 }
 
 message TodaysActivityResponse{
@@ -242,6 +243,8 @@ message TodaysActivityBookResponse{
 message TodaysBrokenDownPositionsRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
+	string BBCDFilter = 3;
+	string TickerFilter = 4;
 }
 
 message TodaysBrokenDownPositionsResponse{
@@ -341,6 +344,7 @@ message TodaysActivityJsonRequest{
 	bool IncludeUserSubmitAllocation = 12;
 	bool IncludeUserSubmitAllocationEx = 13;
 	bool IncludeClerkReject = 14;
+	bool IncludeOnlyCompleted = 15;
 }
 
 message TodaysActivityJsonResponse{
