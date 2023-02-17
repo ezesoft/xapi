@@ -209,6 +209,7 @@ message TodaysActivityRequest{
 	bool IncludeUserSubmitAllocationEx = 13;
 	bool IncludeClerkReject = 14;
 	bool IncludeOnlyCompleted = 15;
+	bool UserSubmitStagedOrderFullInfo = 16;
 }
 
 message TodaysActivityResponse{

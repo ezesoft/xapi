@@ -23,11 +23,27 @@ message SubmitSingleOrderRequest{
 	google.protobuf.DoubleValue StopPrice = 16;
 	string UserMessage = 17;
 	google.protobuf.Timestamp ExpirationDate = 18;
+	bool ReturnResult = 19;
 }
-
+message OrderDetailsResponse{
+	string OrderId = 1;
+	string RefersToId = 2;
+	string Symbol = 3;
+	string Type = 4;
+	string CurrentStatus = 5;
+	int32 Volume = 6;
+	google.protobuf.DoubleValue Price = 7;
+	PriceTypeEnum PriceType = 8;
+	string Buyorsell = 9;
+	map<string, string> ExtendedFields = 10;
+	string OrderTag = 11;
+	int32 VolumeTraded = 12;
+}
 message SubmitSingleOrderResponse{
 	string ServerResponse = 1;
-	map<string, string> OptionalFields = 2;
+	OrderDetailsResponse OrderDetails = 2;
+	map<string, string> OptionalFields = 3 ;
+
 }
 
 message ChangeSingleOrderRequest{
