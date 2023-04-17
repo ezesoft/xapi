@@ -1,4 +1,4 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -25,6 +25,32 @@ message SubmitSingleOrderRequest{
 	google.protobuf.Timestamp ExpirationDate = 18;
 	bool ReturnResult = 19;
 }
+
+message AllocationDetails{
+	string TargetAccount =1;
+	int32 TargetQuantity = 2;
+	google.protobuf.DoubleValue TargetPrice = 3;
+	string AllocationDestinationRoute =4;
+	google.protobuf.DoubleValue CommissionRate =5;
+	google.protobuf.Int32Value CommissionRateType = 6;
+	google.protobuf.DoubleValue NetPrice = 7;
+	string GeneralMessage = 8;
+}
+
+message SubmitBookTradeRequest{
+	string OrderId = 1;	
+	string SourceAccount = 2;	
+	string UserToken = 3;
+	string OrderTag = 4;
+	repeated AllocationDetails AllocDetails =5;
+}
+
+message SubmitBookTradeResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+}
+
+
 message OrderDetailsResponse{
 	string OrderId = 1;
 	string RefersToId = 2;
@@ -415,6 +441,7 @@ message OrderDetailByDateRangeJsonResponse{
 
 service SubmitOrderService{
 	rpc SubmitSingleOrder (SubmitSingleOrderRequest) returns (SubmitSingleOrderResponse);
+	rpc SubmitBookTrade (SubmitBookTradeRequest) returns (SubmitBookTradeResponse);
 	rpc SubmitPairOrder (SubmitPairOrderRequest) returns (SubmitPairOrderResponse);
 	rpc ChangePairOrder (ChangePairOrderRequest) returns (ChangePairOrderResponse);
 	rpc CancelPairOrder (CancelPairOrderRequest) returns (CancelPairOrderResponse);
