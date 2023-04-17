@@ -1,4 +1,4 @@
-﻿syntax = "proto3";
+syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -172,7 +172,7 @@ message RemoveSymbolsResponse{
 // Market Makers: Level 2 Data Request, Response
 message Level2MarketDataRequest{
 	string UserToken = 1;
-	string Symbol = 2;
+	repeated string Symbols = 2;
 	google.protobuf.Int32Value RequestId = 3;
 	repeated string MarketSource = 4;
 	bool Request = 5;
@@ -215,8 +215,6 @@ message OptionChainRequest{
 	string UserToken = 1;
 	string SymbolRoot = 2;
 	google.protobuf.Int32Value RequestId = 3;
-	bool Request = 4;
-	bool Advise = 5;
 }
 message QuoteChainResponse{
 	string DispName = 2;
@@ -238,8 +236,6 @@ message OptionChainResponse{
 message SymbolReferenceDataRequest{
 	string UserToken = 1;
 	string Symbol = 2;
-	bool Request = 3;
-	bool Advise = 4;
 }
 message SymInfoResponse{
 	google.protobuf.Int32Value Styp = 1;
