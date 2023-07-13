@@ -1,4 +1,12 @@
+// Version : "2023.4.0"
+
 syntax = "proto3";
+
+package ezesoft.xapi.generated;
+
+option java_package = "com.ezesoft.xapi.generated";
+option csharp_namespace = "ezesoft.xapi.generated";
+
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -51,8 +59,6 @@ message DailyWeeklyMonthlyBarsRequest{
 	google.protobuf.Timestamp StopDate = 4;
 	google.protobuf.Int32Value DaysBack = 5;
 	google.protobuf.Int32Value RequestId = 6;
-	bool Request = 7;
-	bool Advise = 8;
 }
 message DailyWeeklyMonthlyBarsResponse{
 	CommonBarsFields BarFields = 1;
@@ -71,8 +77,6 @@ message IntradayBarsRequest{
 	google.protobuf.Duration StartTime = 7;
 	google.protobuf.Duration StopTime = 8;
 	google.protobuf.Int32Value requestId = 9;
-	bool Request = 10;
-	bool Advise = 11;
 }
 message IntradayBarsResponse{
 	CommonBarsFields Bars = 1; 
@@ -260,8 +264,6 @@ message TickDataRequest{
 	google.protobuf.Duration StopTime = 5;
 	google.protobuf.Int32Value RequestId = 6;
 	repeated TickTypes TickTypes = 7;
-	bool Request = 8;
-	bool Advise = 9;
 }
 message TicksResponse{
 	repeated Price TrdPrc1 = 2;
@@ -282,8 +284,6 @@ message TickDataResponse{
 message OptionsAndGreekDataRequest{
 	string UserToken = 1;
 	repeated string Symbols = 2;
-	bool Request = 3;
-	bool Advise = 4;
 }
 message OptionCalculationResponse{
 	google.protobuf.Int32Value Model = 1;
@@ -462,6 +462,12 @@ message Level1MarketDataRecord{
 	map<string, string> ExtendedFields = 23;
 }
 
+message Level1MarketDataRecordRequest{
+	string UserToken = 1;
+	repeated string Symbols = 2;
+	repeated string RegionalExchangeIds = 3;
+}
+
 message Level1MarketDataRecordResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated Level1MarketDataRecord DataRecord= 2;
@@ -486,5 +492,5 @@ service MarketDataService{
 	rpc RemoveSymbols (RemoveSymbolsRequest) returns (RemoveSymbolsResponse);
 	rpc GetSymbolsFromCompanyName (SymbolsFromCompanyNameRequest) returns (SymbolsFromCompanyNameResponse);
 	rpc GetSymbolFromAlternateSymbology(SymbolFromAlternateSymbologyRequest) returns (SymbolFromAlternateSymbologyResponse);
-	rpc GetLevel1MarketData(Level1MarketDataRequest) returns (Level1MarketDataRecordResponse);
+	rpc GetLevel1MarketData(Level1MarketDataRecordRequest) returns (Level1MarketDataRecordResponse);
 }
