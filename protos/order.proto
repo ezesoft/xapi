@@ -1,4 +1,12 @@
+// Version : "2023.4.0"
+
 syntax = "proto3";
+
+package ezesoft.xapi.generated;
+
+option java_package = "com.ezesoft.xapi.generated";
+option csharp_namespace = "ezesoft.xapi.generated";
+
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -403,6 +411,8 @@ message SubmitTradeReportResponse{
 message OrderInfoFilters{
 	bool IncludeOrders = 1;
 	bool IncludeExecutions = 2;
+	bool IncludeClerkReject  = 3;
+	bool IncludeExchangeKillOrder  = 4;
 }
 
 message SubscribeOrderInfoJsonRequest{

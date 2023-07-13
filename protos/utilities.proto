@@ -1,4 +1,12 @@
-﻿syntax = "proto3";
+// Version : "2023.4.0"
+
+syntax = "proto3";
+
+package ezesoft.xapi.generated;
+
+option java_package = "com.ezesoft.xapi.generated";
+option csharp_namespace = "ezesoft.xapi.generated";
+
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
