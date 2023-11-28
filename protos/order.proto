@@ -1,12 +1,6 @@
-// Version : "2023.4.0"
+﻿// Version : "2023.7.0"
 
 syntax = "proto3";
-
-package ezesoft.xapi.generated;
-
-option java_package = "com.ezesoft.xapi.generated";
-option csharp_namespace = "ezesoft.xapi.generated";
-
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
@@ -56,6 +50,7 @@ message SubmitBookTradeRequest{
 message SubmitBookTradeResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 
@@ -72,11 +67,13 @@ message OrderDetailsResponse{
 	map<string, string> ExtendedFields = 10;
 	string OrderTag = 11;
 	int32 VolumeTraded = 12;
+	string OriginalOrderId = 13;
 }
 message SubmitSingleOrderResponse{
 	string ServerResponse = 1;
 	OrderDetailsResponse OrderDetails = 2;
 	map<string, string> OptionalFields = 3 ;
+	ServerAcknowledgement Acknowledgement = 4;
 
 }
 
@@ -98,6 +95,7 @@ message ChangeSingleOrderRequest{
 message ChangeSingleOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message CancelSingleOrderRequest{
@@ -108,6 +106,7 @@ message CancelSingleOrderRequest{
 message CancelSingleOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message SubmitPairOrderRequest{
@@ -132,6 +131,7 @@ message SubmitPairOrderRequest{
 message SubmitPairOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message ChangePairOrderRequest{
@@ -149,6 +149,7 @@ message ChangePairOrderRequest{
 message ChangePairOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message CancelPairOrderRequest{
@@ -159,6 +160,7 @@ message CancelPairOrderRequest{
 message CancelPairOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message SubmitSeedDataRequest{
@@ -170,6 +172,7 @@ message SubmitSeedDataRequest{
 message SubmitSeedDataResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message SubscribeOrderInfoRequest{
@@ -223,6 +226,7 @@ message SubscribeOrderInfoResponse{
 	string Account = 30;
 	string OrderTag = 31;
 	int32 VolumeTraded = 32;
+	ServerAcknowledgement Acknowledgement = 33;
 }
 
 message UserAccountsRequest{
@@ -348,6 +352,7 @@ message BasketOrderRequest{
 message BasketOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message AllocationType{
@@ -382,6 +387,7 @@ message SubmitAllocationOrderRequest{
 message SubmitAllocationOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message TradeType{
@@ -406,6 +412,8 @@ message SubmitTradeReportRequest{
 message SubmitTradeReportResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
+
 }
 
 message OrderInfoFilters{
@@ -434,6 +442,18 @@ message OrderDetailByOrderIdJsonResponse{
 	string OrderDetail = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+message OrderDetailByOrderTagRequest{
+	string UserToken = 1;
+	repeated string OrderTags = 2;
+	string OrderEventType = 3;
+}
+
+message OrderDetailByOrderTagResponse{
+	repeated OrderDetailsResponse OrderDetails = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
 
 message OrderDetailByDateRangeJsonRequest{
 	string UserToken = 1;
@@ -466,4 +486,5 @@ service SubmitOrderService{
 	rpc SubscribeOrderInfoJson (SubscribeOrderInfoJsonRequest) returns (stream SubscribeOrderInfoJsonResponse);
 	rpc GetOrderDetailByOrderIdJson (OrderDetailByOrderIdJsonRequest) returns (OrderDetailByOrderIdJsonResponse);
 	rpc GetOrderDetailByDateRangeJson (OrderDetailByDateRangeJsonRequest) returns (stream OrderDetailByDateRangeJsonResponse);
+	rpc GetOrderDetailByOrderTag (OrderDetailByOrderTagRequest) returns (OrderDetailByOrderTagResponse);
 }
