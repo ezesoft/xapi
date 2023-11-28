@@ -1,19 +1,24 @@
-// Version : "2023.4.0"
+﻿// Version : "2023.7.0"
 
 syntax = "proto3";
-
-package ezesoft.xapi.generated;
-
-option java_package = "com.ezesoft.xapi.generated";
-option csharp_namespace = "ezesoft.xapi.generated";
-
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
 
+
 message ServerAcknowledgement{
+	enum ResponseCodesEnum{
+		SUCCESS = 0;
+		WARNING = 1;
+		FAILED = 2;
+		ERROR = 3;
+		TIMED_OUT = 4;
+		SESSION_NOT_FOUND = 5;
+	}
+
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	string Message = 3;
+	ResponseCodesEnum ResponseCode = 4;
 }
 
 message StartLoginSrpRequest{
@@ -29,6 +34,8 @@ message StartLoginSrpResponse{
 	string srpg = 5;
 	string srpb = 6;
 	string Response = 7;
+	ServerAcknowledgement Acknowledgement = 8;
+
 }
 
 message CompleteLoginSrpRequest{
@@ -44,6 +51,7 @@ message CompleteLoginSrpRequest{
 message CompleteLoginSrpResponse{
 	string UserToken = 1;
 	string Response = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message Price{
@@ -281,6 +289,7 @@ message ConnectRequest{
 message ConnectResponse{
 	string UserToken = 1;
 	string Response = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message DisconnectRequest{
@@ -290,6 +299,7 @@ message DisconnectRequest{
 message DisconnectResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message ChangePasswordSRPRequest{
@@ -303,6 +313,7 @@ message ChangePasswordSRPRequest{
 message ChangePasswordSRPResponse{
 	string status = 1;
 	string message = 2;
+	ServerAcknowledgement Acknowledgement = 3;
 }
 
 message SubscribeHeartBeatRequest{
@@ -361,6 +372,22 @@ message TodaysActivityJsonResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+message HealthCheckRequest {
+	string UserToken = 1;
+}
+
+message HealthCheckResponse {
+  enum ServingStatus {
+    SERVING = 0;
+	SESSION_NOTFOUND = 1;
+	SESSION_OK = 2;
+	FAILURE = 3;
+  }
+
+  ServingStatus Status = 1;
+  ServerAcknowledgement Acknowledgement = 2;
+}
+
 message ExpirationType{
 	enum ExpirationTypes{
 		DAY = 0;
@@ -386,6 +413,7 @@ message PriceTypeEnum{
 	PriceTypesEnum PriceType = 1;
 }
 
+
 service UtilityServices{
 	rpc GetTodaysBalances (TodaysBalancesRequest) returns (TodaysBalancesResponse);
 	rpc GetTodaysActivity (TodaysActivityRequest) returns (TodaysActivityResponse);
@@ -400,4 +428,5 @@ service UtilityServices{
 	rpc ChangePasswordSRP (ChangePasswordSRPRequest) returns (ChangePasswordSRPResponse);
 	rpc GetStrategyList (StrategyListRequest) returns (StrategyListResponse);
 	rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
+	rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
 }
