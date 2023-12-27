@@ -1,4 +1,4 @@
-﻿// Version : "2023.7.0"
+// Version : "2023.8.0"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
