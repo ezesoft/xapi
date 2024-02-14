@@ -1,4 +1,4 @@
-// Version : "2023.8.1"
+﻿// Version : "2024.1.0"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
@@ -71,6 +71,7 @@ message IntradayBarsRequest{
 	google.protobuf.Duration StartTime = 7;
 	google.protobuf.Duration StopTime = 8;
 	google.protobuf.Int32Value requestId = 9;
+	bool ShowPrePostMarket = 10;
 }
 message IntradayBarsResponse{
 	CommonBarsFields Bars = 1; 
@@ -379,6 +380,7 @@ message SecurityData{
 	string PrimaryExchange = 53;
 	string RicCode = 54;
 	string Sedol = 55;
+	string MIC = 56;
 }
 message SecurityDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
