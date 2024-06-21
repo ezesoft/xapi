@@ -1,4 +1,4 @@
-﻿// Version : "2024.2.0"
+// Version : "2024.4.0"
 
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
@@ -372,22 +372,6 @@ message TodaysActivityJsonResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
-message HealthCheckRequest {
-	string UserToken = 1;
-}
-
-message HealthCheckResponse {
-  enum ServingStatus {
-    SERVING = 0;
-	SESSION_NOTFOUND = 1;
-	SESSION_OK = 2;
-	FAILURE = 3;
-  }
-
-  ServingStatus Status = 1;
-  ServerAcknowledgement Acknowledgement = 2;
-}
-
 message ExpirationType{
 	enum ExpirationTypes{
 		DAY = 0;
@@ -428,5 +412,4 @@ service UtilityServices{
 	rpc ChangePasswordSRP (ChangePasswordSRPRequest) returns (ChangePasswordSRPResponse);
 	rpc GetStrategyList (StrategyListRequest) returns (StrategyListResponse);
 	rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
-	rpc HealthCheck(HealthCheckRequest) returns (HealthCheckResponse);
 }
