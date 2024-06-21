@@ -1,4 +1,4 @@
-﻿// Version : "2024.2.0"
+// Version : "2024.4.0"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
@@ -26,6 +26,7 @@ message SubmitSingleOrderRequest{
 	string UserMessage = 17;
 	google.protobuf.Timestamp ExpirationDate = 18;
 	bool ReturnResult = 19;
+	int32 ReturnResultTimeOutInMs =20;
 }
 
 message AllocationDetails{

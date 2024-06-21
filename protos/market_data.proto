@@ -1,4 +1,4 @@
-﻿// Version : "2024.2.0"
+// Version : "2024.4.0"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
@@ -147,6 +147,14 @@ message UnSubscribeLevel1DataResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+message UnSubscribeTickDataRequest{
+	string UserToken = 1;
+}
+
+message UnSubscribeTickDataResponse{
+	ServerAcknowledgement Acknowledgement = 3;
+}
+
 message AddSymbolsRequest{
 	string UserToken = 1;
 	repeated string Symbols = 2;
@@ -278,7 +286,27 @@ message TickDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated TicksResponse TickInfo = 2;
 }
-
+message SubscribeTickDataRequest{
+	string UserToken = 1;
+	string Symbol = 2;
+	bool Request = 3;
+	google.protobuf.Timestamp Date = 4;
+	google.protobuf.Duration StartTime = 5;
+	google.protobuf.Duration StopTime = 6;
+	google.protobuf.Int32Value RequestId = 7;
+	repeated TickTypes TickTypes = 8;
+}
+message SubscribeTickDataResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	repeated Price TrdPrc1 = 2;
+	repeated google.protobuf.Timestamp TrdDate = 3;
+	repeated int32 TickType = 4;
+	repeated string TrdXid1 = 5;
+	repeated int32 TrdVol1 = 6;
+	repeated google.protobuf.Duration TrdTim1 = 7;
+	repeated string DispName = 8;
+	int32 Count = 9;
+}
 // Option Server: Request, Response
 message OptionsAndGreekDataRequest{
 	string UserToken = 1;
@@ -493,4 +521,6 @@ service MarketDataService{
 	rpc GetSymbolsFromCompanyName (SymbolsFromCompanyNameRequest) returns (SymbolsFromCompanyNameResponse);
 	rpc GetSymbolFromAlternateSymbology(SymbolFromAlternateSymbologyRequest) returns (SymbolFromAlternateSymbologyResponse);
 	rpc GetLevel1MarketData(Level1MarketDataRecordRequest) returns (Level1MarketDataRecordResponse);
+	rpc SubscribeTickData (SubscribeTickDataRequest) returns (stream SubscribeTickDataResponse);
+	rpc UnSubscribeTickData (UnSubscribeTickDataRequest) returns (UnSubscribeTickDataResponse);
 }
