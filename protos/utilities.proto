@@ -1,4 +1,4 @@
-﻿// Version : "2024.6.0"
+﻿// Version : "2024.7.0"
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
@@ -126,6 +126,7 @@ message AggregatePositionRecord{
 	string Customer = 21;
 	string Branch = 22;
 	string Bank = 23;
+	map<string, string> ExtendedFields = 24;
 }
 
 message OrderResponse{
@@ -159,7 +160,20 @@ message OrderResponse{
 	string OrderTag = 31;
 	int32 VolumeTraded = 32;
 }
-
+message SubscribeNetPositionsRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+}
+message SubscribeNetPositionsResponse{
+	AggregatePositionRecord AggregatePositions = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+message UnSubscribeNetPositionsRequest{
+	string UserToken = 1;
+}
+message UnSubscribeNetPositionsResponse{
+	ServerAcknowledgement Acknowledgement = 2;
+}
 message DepositRow{
 	double Mmr0Adj = 1;
 	double Sma0 = 2;
@@ -403,6 +417,8 @@ service UtilityServices{
 	rpc GetTodaysActivityBook (TodaysActivityBookRequest) returns (TodaysActivityBookResponse);
 	rpc GetTodaysBrokenDownPositions (TodaysBrokenDownPositionsRequest) returns (TodaysBrokenDownPositionsResponse);
 	rpc GetTodaysNetPositions (TodaysNetPositionsRequest) returns (TodaysNetPositionsResponse);
+	rpc SubscribeTodaysNetPositions (SubscribeNetPositionsRequest) returns (stream SubscribeNetPositionsResponse);
+	rpc UnSubscribeTodaysNetPositions (UnSubscribeNetPositionsRequest) returns ( UnSubscribeNetPositionsResponse);
 	rpc Connect (ConnectRequest) returns (ConnectResponse);
 	rpc SubscribeHeartBeat (SubscribeHeartBeatRequest) returns (stream SubscribeHeartBeatResponse);
 	rpc Disconnect (DisconnectRequest) returns (DisconnectResponse);
