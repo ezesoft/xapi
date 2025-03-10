@@ -1,10 +1,10 @@
-﻿// Version : "2024.7.1"
+﻿// Version : "2025.1.0"
 syntax = "proto3";
-
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
 import "google/protobuf/timestamp.proto";
 import "utilities.proto";
+
 
 message SubmitSingleOrderRequest{
 	string Symbol = 1;
@@ -53,7 +53,6 @@ message SubmitBookTradeResponse{
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
-
 
 message OrderDetailsResponse{
 	string OrderId = 1;
@@ -434,13 +433,13 @@ message SubscribeOrderInfoJsonResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
-message OrderDetailByOrderIdJsonRequest{
+message OrderDetailByOrderIdRequest{
 	string UserToken = 1;
 	string OrderId = 2;
 }
 
-message OrderDetailByOrderIdJsonResponse{
-	string OrderDetail = 1;
+message OrderDetailByOrderIdResponse{
+	repeated OrderDetailsResponse OrderDetails = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
@@ -454,7 +453,6 @@ message OrderDetailByOrderTagResponse{
 	repeated OrderDetailsResponse OrderDetails = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
-
 
 message OrderDetailByDateRangeJsonRequest{
 	string UserToken = 1;
@@ -485,7 +483,7 @@ service SubmitOrderService{
 	rpc SubmitAllocationOrder (SubmitAllocationOrderRequest) returns (SubmitAllocationOrderResponse);
 	rpc SubmitTradeReport (SubmitTradeReportRequest) returns (SubmitTradeReportResponse);
 	rpc SubscribeOrderInfoJson (SubscribeOrderInfoJsonRequest) returns (stream SubscribeOrderInfoJsonResponse);
-	rpc GetOrderDetailByOrderIdJson (OrderDetailByOrderIdJsonRequest) returns (OrderDetailByOrderIdJsonResponse);
+	rpc GetOrderDetailByOrderId (OrderDetailByOrderIdRequest) returns (OrderDetailByOrderIdResponse);
 	rpc GetOrderDetailByDateRangeJson (OrderDetailByDateRangeJsonRequest) returns (stream OrderDetailByDateRangeJsonResponse);
 	rpc GetOrderDetailByOrderTag (OrderDetailByOrderTagRequest) returns (OrderDetailByOrderTagResponse);
 }
