@@ -1,4 +1,4 @@
-﻿// Version : "2024.7.1"
+﻿// Version : "2025.1.0"
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
 import "google/protobuf/wrappers.proto";
@@ -126,7 +126,6 @@ message AggregatePositionRecord{
 	string Customer = 21;
 	string Branch = 22;
 	string Bank = 23;
-	map<string, string> ExtendedFields = 24;
 }
 
 message OrderResponse{
@@ -160,20 +159,7 @@ message OrderResponse{
 	string OrderTag = 31;
 	int32 VolumeTraded = 32;
 }
-message SubscribeNetPositionsRequest{
-	string UserToken = 1;
-	int32 TimeoutInSeconds = 2;
-}
-message SubscribeNetPositionsResponse{
-	AggregatePositionRecord AggregatePositions = 1;
-	ServerAcknowledgement Acknowledgement = 2;
-}
-message UnSubscribeNetPositionsRequest{
-	string UserToken = 1;
-}
-message UnSubscribeNetPositionsResponse{
-	ServerAcknowledgement Acknowledgement = 2;
-}
+
 message DepositRow{
 	double Mmr0Adj = 1;
 	double Sma0 = 2;
@@ -259,17 +245,6 @@ message BookOrder{
 	double AveragePrice = 10;
 }
 
-message TodaysActivityBookRequest{
-	string UserToken = 1;
-	int32 OrderTypeFlags = 2;
-	int32 TimeoutInSeconds = 3;
-}
-
-message TodaysActivityBookResponse{
-	repeated BookOrder BookList = 1;
-	ServerAcknowledgement Acknowledgement = 2;
-}
-
 message TodaysBrokenDownPositionsRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
@@ -289,6 +264,21 @@ message TodaysNetPositionsRequest{
 
 message TodaysNetPositionsResponse{
 	repeated AggregatePositionRecord AggregatePositionsList = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message SubscribeNetPositionsRequest{
+	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
+}
+message SubscribeNetPositionsResponse{
+	AggregatePositionRecord AggregatePositions = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+message UnSubscribeNetPositionsRequest{
+	string UserToken = 1;
+}
+message UnSubscribeNetPositionsResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
@@ -414,7 +404,6 @@ message PriceTypeEnum{
 service UtilityServices{
 	rpc GetTodaysBalances (TodaysBalancesRequest) returns (TodaysBalancesResponse);
 	rpc GetTodaysActivity (TodaysActivityRequest) returns (TodaysActivityResponse);
-	rpc GetTodaysActivityBook (TodaysActivityBookRequest) returns (TodaysActivityBookResponse);
 	rpc GetTodaysBrokenDownPositions (TodaysBrokenDownPositionsRequest) returns (TodaysBrokenDownPositionsResponse);
 	rpc GetTodaysNetPositions (TodaysNetPositionsRequest) returns (TodaysNetPositionsResponse);
 	rpc SubscribeTodaysNetPositions (SubscribeNetPositionsRequest) returns (stream SubscribeNetPositionsResponse);
