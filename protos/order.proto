@@ -1,4 +1,5 @@
-﻿// Version : "2025.1.0"
+﻿// Version : "2025.2.0"
+
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
@@ -194,6 +195,7 @@ message SubscribeOrderInfoRequest{
 	bool IncludeUserSubmitAllocation = 12;
 	bool IncludeUserSubmitAllocationEx = 13;
 	bool IncludeClerkReject = 14;
+	bool ExcludeHistory = 15;
 }
 
 message SubscribeOrderInfoResponse{
@@ -454,7 +456,8 @@ message OrderDetailByOrderTagResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
-message OrderDetailByDateRangeJsonRequest{
+
+message OrderDetailByDateRangeRequest{
 	string UserToken = 1;
 	google.protobuf.Timestamp StartDate = 2;
 	google.protobuf.Duration StartTime = 3;
@@ -463,8 +466,8 @@ message OrderDetailByDateRangeJsonRequest{
 	int32 TimeoutInSeconds = 6;
 }
 
-message OrderDetailByDateRangeJsonResponse{
-	string OrderDetail = 1;
+message OrderDetailByDateRangeResponse{
+	OrderDetailsResponse OrderDetail = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
@@ -484,6 +487,6 @@ service SubmitOrderService{
 	rpc SubmitTradeReport (SubmitTradeReportRequest) returns (SubmitTradeReportResponse);
 	rpc SubscribeOrderInfoJson (SubscribeOrderInfoJsonRequest) returns (stream SubscribeOrderInfoJsonResponse);
 	rpc GetOrderDetailByOrderId (OrderDetailByOrderIdRequest) returns (OrderDetailByOrderIdResponse);
-	rpc GetOrderDetailByDateRangeJson (OrderDetailByDateRangeJsonRequest) returns (stream OrderDetailByDateRangeJsonResponse);
+	rpc GetOrderDetailByDateRange (OrderDetailByDateRangeRequest) returns (stream OrderDetailByDateRangeResponse);
 	rpc GetOrderDetailByOrderTag (OrderDetailByOrderTagRequest) returns (OrderDetailByOrderTagResponse);
 }

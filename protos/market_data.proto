@@ -1,4 +1,5 @@
-﻿// Version : "2025.1.0"	
+﻿// Version : "2025.2.0"
+
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
 import "google/protobuf/duration.proto";
