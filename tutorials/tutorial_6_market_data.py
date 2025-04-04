@@ -21,25 +21,38 @@ class MarketDataExample:
             for tick in response:
                 if tick.Trdprc1.DecimalValue == 0.0:
                     continue
-                print('Received market data for {0}, Last: {1}'.format(tick.DispName, tick.Trdprc1.DecimalValue))
+                print(f'Received market data for {tick.DispName}, Last: {tick.Trdprc1.DecimalValue}')
         except Exception as e:
             print(e)
 
     def run(self):
+        # Load the SSL/TLS certificates
         with open(r'roots.pem', 'rb') as f:
             cert = f.read()
-
-        channel = grpc.secure_channel('{0}:{1}'.format(self.server, self.port), grpc.ssl_channel_credentials(root_certificates=cert))
+        channel = grpc.secure_channel(
+            f'{self.server}:{self.port}',
+            grpc.ssl_channel_credentials(root_certificates=cert)
+        )
         util_stub = util_grpc.UtilityServicesStub(channel)
 
-        connect_response = util_stub.Connect(util.ConnectRequest(UserName=self.user, Domain=self.domain, Password=self.password, Locale=self.locale))
+        connect_response = util_stub.Connect(util.ConnectRequest(
+            UserName=self.user,
+            Domain=self.domain,
+            Password=self.password,
+            Locale=self.locale
+        ))
         print('Connect result: ', connect_response.Response)
 
         if connect_response.Response == 'success':
             md_stub = md_grpc.MarketDataServiceStub(channel)
-            response = md_stub.SubscribeLevel1Ticks(md.Level1MarketDataRequest(Symbols=['TSLA'], Request=True, Advise=True, UserToken=connect_response.UserToken))
-            
-            t = Thread(target=self.handle_data, args=(response, ))
+            response = md_stub.SubscribeLevel1Ticks(md.Level1MarketDataRequest(
+                Symbols=['GE'],
+                Request=True,
+                Advise=True,
+                UserToken=connect_response.UserToken
+            ))
+
+            t = Thread(target=self.handle_data, args=(response,))
             t.start()
             for i in range(5):
                 print('Hello from main thread: ', i)
@@ -48,9 +61,13 @@ class MarketDataExample:
             response.cancel()
             t.join()
 
-            disconnect_response = util_stub.Disconnect(util.DisconnectRequest(UserToken=connect_response.UserToken))
+            disconnect_response = util_stub.Disconnect(util.DisconnectRequest(
+                UserToken=connect_response.UserToken
+            ))
             print('Disconnect result: ', disconnect_response.ServerResponse)
+
 
 if __name__ == "__main__":
     example = MarketDataExample()
     example.run()
+
