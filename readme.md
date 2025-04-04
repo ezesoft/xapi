@@ -10,15 +10,18 @@ The following tutorials explain how to install gRPC and compile the xAPI proto f
 
 You will need server details and login credentials to execute the code in the tutorials below. Contact your SS&C Eze client service representative to request details. If you do not have a sales representative, [let us know](https://info.ezesoft.com/request-a-demo) that you want try xAPI!
 
+# xAPI Python Client
+
 ## Installation
 
-If you do not have Python installed, [Anaconda](https://www.anaconda.com/) is easy to use and is good at managing multiple environments. After downloading and installing Anaconda, open an Anaconda Prompt, create an environment with the gRPC libraries and activate it with the following three commands:
+If you do not have Python installed, download and install it from the [official Python website](https://www.python.org/downloads/). Ensure that you add Python to your system PATH during installation.
 
-    conda create --name xapi python=3.8
-    conda activate xapi
-    conda install grpcio grpcio-tools pandas
+Open a Command Prompt and create a virtual environment with the following commands:
 
-> **Tip**: When you open an Anaconda Prompt, you can return to the xapi environment with the `conda activate xapi` command
+	python -m venv xapi-env xapi-env\Scripts\activate 
+	pip install grpcio grpcio-tools pandas
+
+> **Tip**: When you open a Command Prompt, you can activate the virtual environment with the `xapi-env\Scripts\activate` command.
 
 Next, clone the xAPI repo to download the latest proto files:
 
@@ -30,13 +33,13 @@ Next, use the Protocol Buffers compiler to generate native Python xAPI interface
  2. *order.proto*: Order management interfaces for creating and cancelling orders
  3. *market_data.proto*: Interfaces for retrieving market data
 
-> **Note**: If you want to see the definition for all available APIs, including all input and output parameters, look in .proto files.
+> **Note**: If you want to see the definition for all available APIs, including all input and output parameters, look in the .proto files.
 
-In Anaconda Prompt, navigate to the tutorials folder
+In Command Prompt, navigate to the tutorials folder:
 
     cd xapi/tutorials
 
-You can execute the following commands in the Anaconda Prompt to compile the *proto* files:
+You can execute the following commands in the Command Prompt to compile the *proto* files:
 
     python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/order.proto
     
@@ -44,19 +47,56 @@ You can execute the following commands in the Anaconda Prompt to compile the *pr
     
     python -m grpc_tools.protoc -I../protos --python_out=. --grpc_python_out=. ../protos/market_data.proto
 
+
+
 The compiler generates six (6) new files:
-- Three (3) *_pb2.py* files containing the request and response classes
-- Three (3) *_pb2_grpc.py* containing client and server classes.
+
+- Three (3) `_pb2.py` files containing the request and response classes
+- Three (3) `_pb2_grpc.py` containing client and server classes.
 
 You now are ready to write Python code to interact with the xAPI system!
+
+## Using PyCharm
+
+To use PyCharm for developing with the xAPI:
+
+1. **Install PyCharm**: Download and install PyCharm from [JetBrains](https://www.jetbrains.com/pycharm/download/).
+
+2. **Open the Project**: Open PyCharm and select "Open" from the welcome screen. Navigate to the `xAPI` directory you cloned earlier and open it.
+
+3. **Configure the Python Interpreter**:
+    - Go to `File > Settings > Project: xAPI > Python Interpreter`.
+    - Click the gear icon and select "Add".
+    - Choose "Existing environment".
+    - Navigate to the virtual environment you created earlier (e.g., `C:\path\to\xapi-env\Scripts\python.exe`).
+    - Click "OK" to set the interpreter.
+
+4. **Run the Code**:
+    - You can now create new Python files or open existing ones in the `tutorials` folder.
+    - To run a script, right-click on the file in the Project Explorer and select "Run".
+
+By following these steps, you can use PyCharm to develop and run your Python code for interacting with the xAPI system.
+
+## Update Parameters
+
+Before running the tutorials, update the following parameters in the script with your actual values:
+
+        self.server = '__SERVER__'
+        self.port = '__PORT__'
+        self.user = '__USER__'
+        self.password = '__PASSWORD__'
+        self.domain = '__DOMAIN__'
+        self.locale = '__LOCALE__'
+		
+There could be more parameters in other scripts as per their requisites, please make sure you update those and execute the scripts.
 
 # Python xAPI Tutorials
 
 Complete code examples for all tutorials may be found [here](./tutorials/), identified by the tutorial number (e.g., *tutorial_1_connect_and_disconnect.py*, etc.). To get the most out of the following tutorials, we recommend opening the code file for the tutorial, and following along.
 
-When you're ready, you can execute the code directly in Anaconda Prompt by invoking python and supplying the file name:
+When you're ready, you can execute the code directly in Command Prompt by invoking python and supplying the file name:
 
-    python tutorial_1_connect_and_disconnet.py
+    python tutorial_1_connect_and_disconnect.py
 
 If you don't already have one installed, there are a number of excellent Python Integrated Development Environments (IDEs) available, such as [Visual Studio Code (VSCode)](https://code.visualstudio.com/) and [PyCharm](https://www.jetbrains.com/pycharm/).
 

@@ -17,3 +17,15 @@ SubscribeOrderInfo is an example of a **Streaming** RPC. The client makes a requ
 Since **streaming** RPC blocks an application, you should loop through the iterator object from a dedicated thread.
 
 A good example of a **Streaming** RPC is market data: the client requests live price updates for a security and receives the updates as they arrive from the exchange.
+
+## Do we need to use heartbeat for having session up for longer time
+
+No. XAPI does auto renew though there is inactivity from client for up until hours like mentioned above. Heartbeat is needed if we are planning to use streaming (subscription) APIs.
+
+## We see heart beat response like UNKNOWN/DEAD. How should we handle this?	
+	1. LIVE- No action needed. All good.
+	2. UNKNOWN / DEAD- From client-side, re-establish GRPC connection and call connect API again.
+	
+## Why do we need heartbeat on client side?	
+	1. This is needed if clients call streaming APIs. The reason here is to detect if there is a disconnection from client's end while sending the heart beat response and if so, we would dispose (logout) that user from xAPI end and the given token wouldn't work forward.
+	2. With sticky session in place, it wouldn't be needed for clients only calling request-response APIs.
