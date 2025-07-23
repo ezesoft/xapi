@@ -10,6 +10,8 @@ The following tutorials explain how to install gRPC and compile the xAPI proto f
 
 You will need server details and login credentials to execute the code in the tutorials below. Contact your SS&C Eze client service representative to request details. If you do not have a sales representative, [let us know](https://info.ezesoft.com/request-a-demo) that you want try xAPI!
 
+For easy access to integration resources, refer to the following links: [EMS xAPI Knowledgebase](https://emsportal.ezesoft.com/xAPI/), [gRPC](https://uatwebxapi.realtick.com/), and REST API ([Swagger](https://emsuatxapi.taltrade.com:9001/index.html) and [Postman](https://www.postman.com/ssnc-eze-ems-xapi/ems-xapi-rest/collection/jeebiq6/ss-c-eze-ems-xapi)) collections.
+
 # xAPI Python Client
 
 ## Installation
