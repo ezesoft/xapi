@@ -1,4 +1,4 @@
-﻿// Version : "2025.6.0"
+﻿// Version : "2025.5.1"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
@@ -69,6 +69,22 @@ message OrderDetailsResponse{
 	string OrderTag = 11;
 	int32 VolumeTraded = 12;
 	string OriginalOrderId = 13;
+	google.protobuf.Timestamp submitTime = 14;
+	string LinkedOrderId = 15;
+	string TicketId = 16;
+	string TraderId = 17;
+	string ClaimedByClerk = 18;
+	string PairSpreadType = 19;
+	string Reason = 20;
+	string TimeStamp = 21;
+	google.protobuf.Timestamp GoodFrom = 22;
+	ExpirationType TimeInForce = 23;
+	google.protobuf.DoubleValue StopPrice = 24;
+	string UserMessage = 25;
+	google.protobuf.Timestamp ExpirationDate = 26;
+	string Side = 27;
+	string Route = 28;
+	string Account = 29;
 }
 message SubmitSingleOrderResponse{
 	string ServerResponse = 1;
@@ -176,42 +192,6 @@ message SubmitSeedDataResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
-message SubscribeOrderFieldOptions{
-	enum Fields{
-		SUBMIT_TIME = 0;
-		ORDER_ID = 1;
-		LINKED_ORDER_ID = 2;
-		REFERS_TO_ID = 3;
-		TICKET_ID = 4;
-		ORIGINAL_ORDER_ID = 5;
-		SYMBOL = 6;
-		TYPE = 7;
-		CURRENT_STATUS = 8;
-		TRADER_ID = 9;
-		CLAIMED_BY_CLERK = 10;
-		VOLUME = 11;
-		PRICE = 12;
-		PRICE_TYPE = 13;
-		BUYORSELL = 14;
-		PAIR_SPREAD_TYPE = 15;
-		REASON = 16;
-		TIME_STAMP = 17;
-		EXTENDED_FIELDS = 18;
-		GOOD_FROM = 19;
-		TIME_IN_FORCE = 20;
-		STOP_PRICE = 21;
-		USER_MESSAGE = 22;
-		EXPIRATION_DATE = 23;
-		SIDE = 24;
-		ROUTE = 25;
-		ACCOUNT = 26;
-		ORDER_TAG = 27;
-		VOLUME_TRADED = 28;
-	}
-	repeated Fields RequestedFields = 1;
-	repeated string RequestedExtendedFields = 2;
-}
-
 message SubscribeOrderInfoRequest{
 	enum SubscriptionLevel{
 		FILL = 0;
@@ -232,7 +212,6 @@ message SubscribeOrderInfoRequest{
 	bool IncludeUserSubmitAllocationEx = 13;
 	bool IncludeClerkReject = 14;
 	bool ExcludeHistory = 15;
-	optional SubscribeOrderFieldOptions FieldSelection = 16;
 }
 
 message SubscribeOrderInfoResponse{
