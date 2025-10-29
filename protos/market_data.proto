@@ -1,4 +1,4 @@
-﻿// Version : "2025.5.1"
+﻿// Version : "2025.6.1"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
@@ -490,17 +490,43 @@ message Level1MarketDataRecord{
 	map<string, string> ExtendedFields = 23;
 }
 
+message Level1FieldOptions {
+	enum Fields {
+		DISP_NAME = 0;
+		TRDPRC1 = 1;
+		TRDTIM1 = 2;
+		SYMBOL_DESC = 3;
+		COMPANY_NAME = 4;
+		ARCA_IMBALANCE_VOLUME = 5;
+		ARCA_MATCH_VOLUME = 6;
+		SALE_CONDITION_VOLUME = 7;
+		INTRADAY_HIGH_COUNT = 8;
+		VWAP_VOL = 9;
+		VWAP = 10;
+		BID = 11;
+		ASK = 12;
+		CHANGE_LAST = 13;
+		HIGH1 = 14;
+		HIGH52 = 15;
+		LOW1 = 16;
+		LOW52 = 17;
+		EXTENDED_FIELDS = 18;
+	}
+	repeated Fields RequestedFields = 1;
+	repeated string RequestedExtendedFields = 2;
+}
+
 message Level1MarketDataRecordRequest{
 	string UserToken = 1;
 	repeated string Symbols = 2;
 	repeated string RegionalExchangeIds = 3;
+	optional Level1FieldOptions FieldSelection = 4;
 }
 
 message Level1MarketDataRecordResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated Level1MarketDataRecord DataRecord= 2;
 }
-
 
 service MarketDataService{
 	rpc GetDailyWeeklyMonthlyBars (DailyWeeklyMonthlyBarsRequest) returns (DailyWeeklyMonthlyBarsResponse);
