@@ -1,4 +1,4 @@
-﻿// Version : "2025.5.1"
+﻿// Version : "2025.6.1"
 
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
@@ -386,6 +386,21 @@ message GetUserRoutesResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+message RoutePropsMap{
+	map<string, string> Properties = 1;
+}
+
+message GetUserRoutePropsRequest{
+	string UserToken = 1;
+	string FilterRoutesList = 2;
+	string FilterRoutePropsList = 3;
+}
+
+message GetUserRoutePropsResponse{
+	map<string, RoutePropsMap> UserRouteProps = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
 message ExpirationType{
 	enum ExpirationTypes{
 		DAY = 0;
@@ -428,4 +443,5 @@ service UtilityServices{
 	rpc GetStrategyList (StrategyListRequest) returns (StrategyListResponse);
 	rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
 	rpc GetUserRoutes (GetUserRoutesRequest) returns (GetUserRoutesResponse);
+	rpc GetUserRouteProps (GetUserRoutePropsRequest) returns (GetUserRoutePropsResponse);
 }
