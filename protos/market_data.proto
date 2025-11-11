@@ -1,4 +1,4 @@
-﻿// Version : "2025.6.1"
+﻿// Version : "2025.7.0"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
@@ -237,6 +237,9 @@ message QuoteChainResponse{
 	google.protobuf.Int32Value Session = 8;
 	google.protobuf.Int32Value Minmove= 9;
 	google.protobuf.DoubleValue Basisvalue = 10;
+	google.protobuf.Timestamp ExpirDate = 11;
+	Price StrikePrice = 12;
+	string PutCallInd = 13;
 }
 message OptionChainResponse{
 	ServerAcknowledgement Acknowledgement = 1;
@@ -528,6 +531,69 @@ message Level1MarketDataRecordResponse{
 	repeated Level1MarketDataRecord DataRecord= 2;
 }
 
+// Bidirectional Real-Time Level 2 Market Data Streaming - Request, Response
+message MarketDataStreamRequest{
+	string UserToken = 1;
+	string RequestType = 2; // ADD_SYMBOL, REMOVE_SYMBOL, CHANGE_SUBSCRIPTION
+	repeated string Symbols = 3;
+	string MarketDataLevel = 4; // LEVEL1, LEVEL2, TICK
+	repeated string RegionalExchangeIds = 5;
+	repeated string MarketSource = 6;
+	bool Request = 7;
+	bool Advise = 8;
+}
+
+message MarketDataStreamResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+	string ResponseType = 2; // LEVEL1_DATA, LEVEL2_DATA, TICK_DATA, STATUS_UPDATE
+	
+	// Level 1 Data
+	string DispName = 3;
+	Price Trdprc1 = 4;
+	google.protobuf.Duration Trdtim1 = 5;
+	string SymbolDesc = 6;
+	string CompanyName = 7;
+	Price Bid = 8;
+	Price Ask = 9;
+	Price ChangeLast = 10;
+	Price High1 = 11;
+	Price Low1 = 12;
+	map<string, string> ExtendedFields = 13;
+	
+	// Level 2 Data
+	string MktSource = 14;
+	string MktMkrId = 15;
+	string MktMkrStatus = 16;
+	string ExchName = 17;
+	string MktMkrDisplay = 18;
+	google.protobuf.Int32Value MktMkrBidsize = 19;
+	google.protobuf.Int32Value MktMkrAsksize = 20;
+	Price MktMkrBid = 21;
+	Price MktMkrAsk = 22;
+	
+	// Tick Data
+	repeated Price TrdPrc1List = 23;
+	repeated google.protobuf.Timestamp TrdDateList = 24;
+	repeated int32 TickTypeList = 25;
+	repeated string TrdXid1List = 26;
+	repeated int32 TrdVol1List = 27;
+	repeated google.protobuf.Duration TrdTim1List = 28;
+	int32 Count = 29;
+	
+	// Status Information
+	string StatusMessage = 30;
+}
+
+message UnSubscribeStreamMarketDataRequest{
+	string UserToken = 1;
+}
+
+message UnSubscribeStreamMarketDataResponse{
+	string ServerResponse = 1;
+	map<string, string> OptionalFields = 2;
+	ServerAcknowledgement Acknowledgement = 3;
+}
+
 service MarketDataService{
 	rpc GetDailyWeeklyMonthlyBars (DailyWeeklyMonthlyBarsRequest) returns (DailyWeeklyMonthlyBarsResponse);
 	rpc GetIntradayBars (IntradayBarsRequest) returns (IntradayBarsResponse);
@@ -549,4 +615,7 @@ service MarketDataService{
 	rpc GetLevel1MarketData(Level1MarketDataRecordRequest) returns (Level1MarketDataRecordResponse);
 	rpc SubscribeTickData (SubscribeTickDataRequest) returns (stream SubscribeTickDataResponse);
 	rpc UnSubscribeTickData (UnSubscribeTickDataRequest) returns (UnSubscribeTickDataResponse);
+	// Bidirectional streaming API for real-time Level 2 market data
+	rpc UnSubscribeStreamMarketData (UnSubscribeStreamMarketDataRequest) returns (UnSubscribeStreamMarketDataResponse);
+	rpc StreamMarketData (stream MarketDataStreamRequest) returns (stream MarketDataStreamResponse);
 }
