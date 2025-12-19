@@ -1,4 +1,4 @@
-﻿// Version : "2025.7.0"
+﻿// Version : "2025.8.0"
 
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
@@ -127,6 +127,7 @@ message AggregatePositionRecord{
 	string Customer = 21;
 	string Branch = 22;
 	string Bank = 23;
+	map<string, string> ExtendedFields = 24;
 }
 
 message OrderResponse{
@@ -197,6 +198,7 @@ message DepositRow{
 	int32 TboAccountId = 33;
 	int32 DaysBack = 34;
 	int32 Rank = 35;
+	map<string, string> ExtendedFields = 36;
 }
 
 message TodaysBalancesRequest{
@@ -353,6 +355,74 @@ message StrategyListResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+message GetFirmNameRequest{
+	string UserToken = 1;
+}
+
+message GetFirmNameResponse{
+	string FirmName = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message UserExistsRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+}
+
+message UserExistsResponse{
+	bool UserExists = 1;
+	string FirmName = 2;
+	ServerAcknowledgement Acknowledgement = 3;
+}
+
+message GetStrategyDataRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+	string AlgoName = 3;
+	string StrategyName = 4;
+}
+
+message StrategyDataRow{
+	string FirmName = 1;
+	string UserName = 2;
+	string AlgoName = 3;
+	string StrategyName = 4;
+	int32 Version = 5;
+	string StratParams = 6;
+	string StratCreateDate = 7;
+	string StratUpdateDate = 8;
+}
+
+message GetStrategyDataResponse{
+	StrategyDataRow StrategyData = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+}
+
+message CreateStrategyRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+	string AlgoName = 3;
+	string StrategyName = 4;
+	string StratParams = 5;
+}
+
+message CreateStrategyResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+}
+
+message UpdateStrategyRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+	string AlgoName = 3;
+	string StrategyName = 4;
+	int32 Version = 5;
+	string StratParams = 6;
+}
+
+message UpdateStrategyResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+}
+
 message TodaysActivityJsonRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
@@ -441,6 +511,11 @@ service UtilityServices{
 	rpc CompleteLoginSrp (CompleteLoginSrpRequest) returns (CompleteLoginSrpResponse);
 	rpc ChangePasswordSRP (ChangePasswordSRPRequest) returns (ChangePasswordSRPResponse);
 	rpc GetStrategyList (StrategyListRequest) returns (StrategyListResponse);
+	rpc GetFirmName (GetFirmNameRequest) returns (GetFirmNameResponse);
+	rpc UserExists (UserExistsRequest) returns (UserExistsResponse);
+	rpc GetStrategyData (GetStrategyDataRequest) returns (GetStrategyDataResponse);
+	rpc CreateStrategy (CreateStrategyRequest) returns (CreateStrategyResponse);
+	rpc UpdateStrategy (UpdateStrategyRequest) returns (UpdateStrategyResponse);
 	rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
 	rpc GetUserRoutes (GetUserRoutesRequest) returns (GetUserRoutesResponse);
 	rpc GetUserRouteProps (GetUserRoutePropsRequest) returns (GetUserRoutePropsResponse);
