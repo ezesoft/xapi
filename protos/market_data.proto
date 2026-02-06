@@ -1,27 +1,39 @@
-﻿// Version : "2025.8.0"
+// Version : "2026.1.0"
 
 syntax = "proto3";
+
 import "google/protobuf/wrappers.proto";
+
 import "google/protobuf/duration.proto";
+
 import "google/protobuf/timestamp.proto";
+
 import "utilities.proto";
 // User defined data types and enumerations
+
 message OptionTypes{
+
 	enum Options{
 		CALL = 0;
 		PUT = 1;
 	}
-	Options CallOrPut = 1;
+
+Options CallOrPut = 1;
 }
+
 message Interval{
+
 	enum Options{
 		DAILY = 0;
 		WEEKLY = 1;
 		MONTHLY = 2;
 	}
-	Options BarIntervalOption = 1;
+
+Options BarIntervalOption = 1;
 }
+
 message TickTypes{
+
     enum Ticks{
 		TRADE = 0;
 		BID = 1;
@@ -33,7 +45,8 @@ message TickTypes{
 		IRREGULAR_DELETE = 44;
 		FORM_T_TRADE = 32;
 	}
-	Ticks TickOption = 1;
+
+Ticks TickOption = 1;
 }
 
 message CommonBarsFields{
@@ -45,7 +58,9 @@ message CommonBarsFields{
 	repeated Price Settle = 7;
 	repeated google.protobuf.Timestamp TrdDate = 8;
 }
+
 // Daily - Request, Response
+
 message DailyWeeklyMonthlyBarsRequest{
 	string UserToken = 1;
 	string Symbol = 2;
@@ -54,6 +69,7 @@ message DailyWeeklyMonthlyBarsRequest{
 	google.protobuf.Int32Value DaysBack = 5;
 	google.protobuf.Int32Value RequestId = 6;
 }
+
 message DailyWeeklyMonthlyBarsResponse{
 	CommonBarsFields BarFields = 1;
 	string DispName = 2;
@@ -61,6 +77,7 @@ message DailyWeeklyMonthlyBarsResponse{
 }
 
 // Intraday - Request, Response
+
 message IntradayBarsRequest{
 	string UserToken = 1;
 	string Symbol = 2;
@@ -73,6 +90,7 @@ message IntradayBarsRequest{
 	google.protobuf.Int32Value requestId = 9;
 	bool ShowPrePostMarket = 10;
 }
+
 message IntradayBarsResponse{
 	CommonBarsFields Bars = 1; 
 	repeated string TrdTim1 = 2;
@@ -80,6 +98,7 @@ message IntradayBarsResponse{
 }
 
 // Live Quote: Options Symbology Request, Response
+
 message OptionSymbolFromDescriptionRequest{
 	string UserToken = 1;
 	string Root = 2;
@@ -87,14 +106,17 @@ message OptionSymbolFromDescriptionRequest{
 	OptionTypes OptionType = 4;
 	double StrikePrice = 5;
 }
+
 message OptionSymbolFromDescriptionResponse{
 	string Symbol = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
 message DescriptionFromOptionSymbolRequest{
 	string UserToken = 1;
 	string Symbol = 2;
 }
+
 message DescriptionFromOptionSymbolResponse{
 	string Root = 1;
 	string Expiration = 2;
@@ -104,6 +126,7 @@ message DescriptionFromOptionSymbolResponse{
 }
 
 // Live Quote: Level 1 Data Request, Response
+
 message Level1MarketDataRequest{
 	string UserToken = 1;
 	repeated string Symbols = 2;
@@ -111,6 +134,7 @@ message Level1MarketDataRequest{
 	bool Request = 4;
 	bool Advise = 5;
 }
+
 message Level1MarketDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	string DispName = 2;
@@ -180,6 +204,7 @@ message RemoveSymbolsResponse{
 }
 
 // Market Makers: Level 2 Data Request, Response
+
 message Level2MarketDataRequest{
 	string UserToken = 1;
 	repeated string Symbols = 2;
@@ -188,6 +213,7 @@ message Level2MarketDataRequest{
 	bool Request = 5;
 	bool Advise = 6;
 }
+
 message Level2MarketDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	string MktSource = 2;
@@ -222,11 +248,13 @@ message UnSubscribeLevel2DataResponse{
 }
 
 // Quote Chain: Request, Response
+
 message OptionChainRequest{
 	string UserToken = 1;
 	string SymbolRoot = 2;
 	google.protobuf.Int32Value RequestId = 3;
 }
+
 message QuoteChainResponse{
 	string DispName = 2;
 	string ExchName = 3;
@@ -241,16 +269,19 @@ message QuoteChainResponse{
 	Price StrikePrice = 12;
 	string PutCallInd = 13;
 }
+
 message OptionChainResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated QuoteChainResponse Derivative = 2;
 }
 
 // SymInfo: Request, Response
+
 message SymbolReferenceDataRequest{
 	string UserToken = 1;
 	string Symbol = 2;
 }
+
 message SymInfoResponse{
 	google.protobuf.Int32Value Styp = 1;
 	string DispName = 2;
@@ -260,12 +291,14 @@ message SymInfoResponse{
 	string ExchName = 6;
 	string SymbolDesc = 7;
 }
+
 message SymbolReferenceDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated SymInfoResponse SymInfoList = 2;
 }
 
 // Ticks: Request, Response
+
 message TickDataRequest{
 	string UserToken = 1;
 	string Symbol = 2;
@@ -275,6 +308,7 @@ message TickDataRequest{
 	google.protobuf.Int32Value RequestId = 6;
 	repeated TickTypes TickTypes = 7;
 }
+
 message TicksResponse{
 	repeated Price TrdPrc1 = 2;
 	repeated google.protobuf.Timestamp TrdDate = 3;
@@ -285,10 +319,12 @@ message TicksResponse{
 	repeated string DispName = 8;
 	int32 Count = 9;
 }
+
 message TickDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated TicksResponse TickInfo = 2;
 }
+
 message SubscribeTickDataRequest{
 	string UserToken = 1;
 	string Symbol = 2;
@@ -299,6 +335,7 @@ message SubscribeTickDataRequest{
 	google.protobuf.Int32Value RequestId = 7;
 	repeated TickTypes TickTypes = 8;
 }
+
 message SubscribeTickDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated Price TrdPrc1 = 2;
@@ -310,11 +347,14 @@ message SubscribeTickDataResponse{
 	repeated string DispName = 8;
 	int32 Count = 9;
 }
+
 // Option Server: Request, Response
+
 message OptionsAndGreekDataRequest{
 	string UserToken = 1;
 	repeated string Symbols = 2;
 }
+
 message OptionCalculationResponse{
 	google.protobuf.Int32Value Model = 1;
 	google.protobuf.DoubleValue Theta = 2;
@@ -345,16 +385,19 @@ message OptionCalculationResponse{
 	string UnderSym = 27;
 	string OptionRoot = 28;
 }
+
 message OptionsAndGreekDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated OptionCalculationResponse OptionsList = 2;
 }
 
 // SecurityInfo: Request, Response
+
 message SecurityDataRequest{
 	string UserToken = 1;
 	string Symbol = 2;
 }
+
 message SecurityData{
 	google.protobuf.Timestamp Divpaydate = 1;
 	google.protobuf.Timestamp Exdivdate = 2;
@@ -413,6 +456,7 @@ message SecurityData{
 	string Sedol = 55;
 	string MIC = 56;
 }
+
 message SecurityDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated SecurityData SecurityInfoList = 2;
@@ -436,6 +480,7 @@ message SymbolData{
 	string GicsSubindustry = 15;
 	string Cusip = 16;
 }
+
 message SymbolsFromCompanyNameRequest{
 	string UserToken = 1;
 	string CompanyName = 2;
@@ -447,6 +492,7 @@ message SymbolsFromCompanyNameResponse{
 }
 
 message AlternateSymbology{
+
 	enum Symbology{
 		ISIN = 0;
 		SEDOL = 1;
@@ -454,18 +500,32 @@ message AlternateSymbology{
 		CUSIP = 3;
 		BBG = 4;
 	}
-	Symbology SymbolOption = 1;
+
+Symbology SymbolOption = 1;
 }
 
 message SymbolFromAlternateSymbologyRequest{
 	string UserToken = 1;
-	string Symbol = 2; 
+	string Symbol = 2;  // Single symbol (backward compatible)
 	AlternateSymbology SymbolInfo = 3;
+	repeated string Symbols = 4;  // Bulk symbols (new - takes precedence if provided)
+}
+
+// Individual result for each symbol lookup
+
+message SymbolLookupResult{
+	string RequestedSymbol = 1;
+	ServerAcknowledgement Acknowledgement = 2;
+	repeated SymbolData SymbolInfolist = 3;
 }
 
 message SymbolFromAlternateSymbologyResponse{
 	ServerAcknowledgement Acknowledgement = 1;
-	repeated SymbolData SymbolInfolist = 2;
+	repeated SymbolData SymbolInfolist = 2;  // For single symbol (backward compatible)
+	repeated SymbolLookupResult Results = 3;  // For bulk symbols (new)
+	int32 SuccessCount = 4;  // Count of successful lookups (bulk only)
+	int32 FailureCount = 5;  // Count of failed lookups (bulk only)
+	int32 TotalCount = 6;  // Total symbols requested (bulk only)
 }
 
 message Level1MarketDataRecord{
@@ -494,6 +554,7 @@ message Level1MarketDataRecord{
 }
 
 message Level1FieldOptions {
+
 	enum Fields {
 		DISP_NAME = 0;
 		TRDPRC1 = 1;
@@ -515,7 +576,8 @@ message Level1FieldOptions {
 		LOW52 = 17;
 		EXTENDED_FIELDS = 18;
 	}
-	repeated Fields RequestedFields = 1;
+
+repeated Fields RequestedFields = 1;
 	repeated string RequestedExtendedFields = 2;
 }
 
@@ -532,6 +594,7 @@ message Level1MarketDataRecordResponse{
 }
 
 // Bidirectional Real-Time Level 2 Market Data Streaming - Request, Response
+
 message MarketDataStreamRequest{
 	string UserToken = 1;
 	string RequestType = 2; // ADD_SYMBOL, REMOVE_SYMBOL, CHANGE_SUBSCRIPTION
@@ -594,28 +657,28 @@ message UnSubscribeStreamMarketDataResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
-service MarketDataService{
-	rpc GetDailyWeeklyMonthlyBars (DailyWeeklyMonthlyBarsRequest) returns (DailyWeeklyMonthlyBarsResponse);
-	rpc GetIntradayBars (IntradayBarsRequest) returns (IntradayBarsResponse);
-	rpc GetOptionChainForUnderlier (OptionChainRequest) returns (OptionChainResponse);
-	rpc GetSymbolReferenceData (SymbolReferenceDataRequest) returns (SymbolReferenceDataResponse);
-	rpc GetTickData (TickDataRequest) returns (TickDataResponse);
-	rpc GetOptionsAndGreekData (OptionsAndGreekDataRequest) returns (OptionsAndGreekDataResponse);
-	rpc GetSecurityData (SecurityDataRequest) returns (SecurityDataResponse);
-	rpc GetOptionSymbolFromDescription (OptionSymbolFromDescriptionRequest) returns (OptionSymbolFromDescriptionResponse);
-	rpc GetDescriptionFromOptionSymbol (DescriptionFromOptionSymbolRequest) returns (DescriptionFromOptionSymbolResponse);
-	rpc SubscribeLevel1Ticks (Level1MarketDataRequest) returns (stream Level1MarketDataResponse);
-	rpc UnSubscribeLevel1Data (UnSubscribeLevel1DataRequest) returns (UnSubscribeLevel1DataResponse);
-	rpc SubscribeLevel2Ticks (Level2MarketDataRequest) returns (stream Level2MarketDataResponse);
-	rpc UnSubscribeLevel2Data (UnSubscribeLevel2DataRequest) returns (UnSubscribeLevel2DataResponse);
-	rpc AddSymbols (AddSymbolsRequest) returns (AddSymbolsResponse);
-	rpc RemoveSymbols (RemoveSymbolsRequest) returns (RemoveSymbolsResponse);
-	rpc GetSymbolsFromCompanyName (SymbolsFromCompanyNameRequest) returns (SymbolsFromCompanyNameResponse);
-	rpc GetSymbolFromAlternateSymbology(SymbolFromAlternateSymbologyRequest) returns (SymbolFromAlternateSymbologyResponse);
-	rpc GetLevel1MarketData(Level1MarketDataRecordRequest) returns (Level1MarketDataRecordResponse);
-	rpc SubscribeTickData (SubscribeTickDataRequest) returns (stream SubscribeTickDataResponse);
-	rpc UnSubscribeTickData (UnSubscribeTickDataRequest) returns (UnSubscribeTickDataResponse);
-	// Bidirectional streaming API for real-time Level 2 market data
-	rpc UnSubscribeStreamMarketData (UnSubscribeStreamMarketDataRequest) returns (UnSubscribeStreamMarketDataResponse);
-	rpc StreamMarketData (stream MarketDataStreamRequest) returns (stream MarketDataStreamResponse);
+service MarketDataService {
+  rpc GetDailyWeeklyMonthlyBars(DailyWeeklyMonthlyBarsRequest) returns (DailyWeeklyMonthlyBarsResponse);
+  rpc GetIntradayBars(IntradayBarsRequest) returns (IntradayBarsResponse);
+  rpc GetOptionChainForUnderlier(OptionChainRequest) returns (OptionChainResponse);
+  rpc GetSymbolReferenceData(SymbolReferenceDataRequest) returns (SymbolReferenceDataResponse);
+  rpc GetTickData(TickDataRequest) returns (TickDataResponse);
+  rpc GetOptionsAndGreekData(OptionsAndGreekDataRequest) returns (OptionsAndGreekDataResponse);
+  rpc GetSecurityData(SecurityDataRequest) returns (SecurityDataResponse);
+  rpc GetOptionSymbolFromDescription(OptionSymbolFromDescriptionRequest) returns (OptionSymbolFromDescriptionResponse);
+  rpc GetDescriptionFromOptionSymbol(DescriptionFromOptionSymbolRequest) returns (DescriptionFromOptionSymbolResponse);
+  rpc SubscribeLevel1Ticks(Level1MarketDataRequest) returns (stream Level1MarketDataResponse);
+  rpc UnSubscribeLevel1Data(UnSubscribeLevel1DataRequest) returns (UnSubscribeLevel1DataResponse);
+  rpc SubscribeLevel2Ticks(Level2MarketDataRequest) returns (stream Level2MarketDataResponse);
+  rpc UnSubscribeLevel2Data(UnSubscribeLevel2DataRequest) returns (UnSubscribeLevel2DataResponse);
+  rpc AddSymbols(AddSymbolsRequest) returns (AddSymbolsResponse);
+  rpc RemoveSymbols(RemoveSymbolsRequest) returns (RemoveSymbolsResponse);
+  rpc GetSymbolsFromCompanyName(SymbolsFromCompanyNameRequest) returns (SymbolsFromCompanyNameResponse);
+  rpc GetSymbolFromAlternateSymbology(SymbolFromAlternateSymbologyRequest) returns (SymbolFromAlternateSymbologyResponse);
+  rpc GetLevel1MarketData(Level1MarketDataRecordRequest) returns (Level1MarketDataRecordResponse);
+  rpc SubscribeTickData(SubscribeTickDataRequest) returns (stream SubscribeTickDataResponse);
+  rpc UnSubscribeTickData(UnSubscribeTickDataRequest) returns (UnSubscribeTickDataResponse);
+  // Bidirectional streaming API for real-time Level 2 market data
+  rpc UnSubscribeStreamMarketData (UnSubscribeStreamMarketDataRequest) returns (UnSubscribeStreamMarketDataResponse);
+  rpc StreamMarketData (stream MarketDataStreamRequest) returns (stream MarketDataStreamResponse);
 }
