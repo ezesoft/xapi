@@ -1,4 +1,4 @@
-﻿// Version : "2025.8.0"
+﻿// Version : "2026.1.0"
 
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
@@ -398,6 +398,35 @@ message GetStrategyDataResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+message CreateUserRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+}
+
+message CreateUserResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+}
+
+message DeleteUserRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+}
+
+message DeleteUserResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+}
+
+message DeleteStrategyRequest{
+	string UserToken = 1;
+	string FirmName = 2;
+	string AlgoName = 3;
+	string StrategyName = 4;
+}
+
+message DeleteStrategyResponse{
+	ServerAcknowledgement Acknowledgement = 1;
+}
+
 message CreateStrategyRequest{
 	string UserToken = 1;
 	string FirmName = 2;
@@ -514,6 +543,9 @@ service UtilityServices{
 	rpc GetFirmName (GetFirmNameRequest) returns (GetFirmNameResponse);
 	rpc UserExists (UserExistsRequest) returns (UserExistsResponse);
 	rpc GetStrategyData (GetStrategyDataRequest) returns (GetStrategyDataResponse);
+	rpc CreateUser (CreateUserRequest) returns (CreateUserResponse);
+	rpc DeleteUser (DeleteUserRequest) returns (DeleteUserResponse);
+	rpc DeleteStrategy (DeleteStrategyRequest) returns (DeleteStrategyResponse);
 	rpc CreateStrategy (CreateStrategyRequest) returns (CreateStrategyResponse);
 	rpc UpdateStrategy (UpdateStrategyRequest) returns (UpdateStrategyResponse);
 	rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
