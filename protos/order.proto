@@ -1,4 +1,4 @@
-﻿// Version : "2026.1.0"
+﻿// Version : "2026.2.0"
 
 syntax = "proto3";
 import "google/protobuf/wrappers.proto";
@@ -517,6 +517,7 @@ message OrderDetailByDateRangeRequest{
 	google.protobuf.Timestamp EndDate = 4;
 	google.protobuf.Duration EndTime = 5;
 	int32 TimeoutInSeconds = 6;
+	string Account = 7;
 }
 
 message OrderDetailByDateRangeResponse{
