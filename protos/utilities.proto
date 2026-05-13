@@ -1,4 +1,4 @@
-﻿// Version : "2026.2.1"
+﻿// Version : "Dev"
 
 syntax = "proto3";
 import "google/protobuf/timestamp.proto";
@@ -300,6 +300,7 @@ message ConnectResponse{
 
 message DisconnectRequest{
 	string UserToken = 1;
+	int32 TimeoutInSeconds = 2;
 }
 
 message DisconnectResponse{
