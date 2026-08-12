@@ -1,11 +1,14 @@
-﻿// Version : "Dev"
+// Version : "2026.5.0"
 
 syntax = "proto3";
-import "google/protobuf/wrappers.proto";
-import "google/protobuf/duration.proto";
-import "google/protobuf/timestamp.proto";
-import "utilities.proto";
 
+import "google/protobuf/wrappers.proto";
+
+import "google/protobuf/duration.proto";
+
+import "google/protobuf/timestamp.proto";
+
+import "utilities.proto";
 
 message SubmitSingleOrderRequest{
 	string Symbol = 1;
@@ -30,6 +33,8 @@ message SubmitSingleOrderRequest{
 	int32 ReturnResultTimeOutInMs =20;
 }
 
+
+
 message AllocationDetails{
 	string TargetAccount =1;
 	int32 TargetQuantity = 2;
@@ -41,6 +46,8 @@ message AllocationDetails{
 	string GeneralMessage = 8;
 }
 
+
+
 message SubmitBookTradeRequest{
 	string OrderId = 1;	
 	string SourceAccount = 2;	
@@ -49,11 +56,15 @@ message SubmitBookTradeRequest{
 	repeated AllocationDetails AllocDetails =5;
 }
 
+
+
 message SubmitBookTradeResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
 
 message OrderDetailsResponse{
 	string OrderId = 1;
@@ -86,6 +97,7 @@ message OrderDetailsResponse{
 	string Route = 28;
 	string Account = 29;
 }
+
 message SubmitSingleOrderResponse{
 	string ServerResponse = 1;
 	OrderDetailsResponse OrderDetails = 2;
@@ -93,6 +105,8 @@ message SubmitSingleOrderResponse{
 	ServerAcknowledgement Acknowledgement = 4;
 
 }
+
+
 
 message ChangeSingleOrderRequest{
 	string OrderId = 1;
@@ -109,22 +123,30 @@ message ChangeSingleOrderRequest{
 	string OrderTag = 12;
 }
 
+
+
 message ChangeSingleOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message CancelSingleOrderRequest{
 	string OrderId = 1;
 	string UserToken = 2;
 }
+
+
 
 message CancelSingleOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
 
 message SubmitPairOrderRequest{
 	string Leg1_Symbol = 1;
@@ -145,11 +167,15 @@ message SubmitPairOrderRequest{
 	string TicketId = 16;
 }
 
+
+
 message SubmitPairOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
 
 message ChangePairOrderRequest{
 	string PairOrderId = 1;
@@ -163,16 +189,22 @@ message ChangePairOrderRequest{
 	string UserToken = 9;
 }
 
+
+
 message ChangePairOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message CancelPairOrderRequest{
 	string OrderId = 1;
 	string UserToken = 2;
 }
+
+
 
 message CancelPairOrderResponse{
 	string ServerResponse = 1;
@@ -180,11 +212,15 @@ message CancelPairOrderResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message SubmitSeedDataRequest{
 	string Account = 1;
 	string Symbol = 2;
 	string UserToken = 3;
 }
+
+
 
 message SubmitSeedDataResponse{
 	string ServerResponse = 1;
@@ -192,7 +228,10 @@ message SubmitSeedDataResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message SubscribeOrderFieldOptions{
+
 	enum Fields{
 		SUBMIT_TIME = 0;
 		ORDER_ID = 1;
@@ -224,15 +263,19 @@ message SubscribeOrderFieldOptions{
 		ORDER_TAG = 27;
 		VOLUME_TRADED = 28;
 	}
+
 	repeated Fields RequestedFields = 1;
 	repeated string RequestedExtendedFields = 2;
 }
 
+
 message SubscribeOrderInfoRequest{
+
 	enum SubscriptionLevel{
 		FILL = 0;
 		STATUS = 1;
 	}
+
 	SubscriptionLevel Level = 1;
 	string UserToken = 2;
 	bool IncludeUserSubmitOrder = 3;
@@ -250,6 +293,7 @@ message SubscribeOrderInfoRequest{
 	bool ExcludeHistory = 15;
 	optional SubscribeOrderFieldOptions FieldSelection = 16;
 }
+
 
 message SubscribeOrderInfoResponse{
 	google.protobuf.Timestamp submitTime = 1;
@@ -284,14 +328,21 @@ message SubscribeOrderInfoResponse{
 	ServerAcknowledgement Acknowledgement = 33;
 }
 
+
+
+
 message UserAccountsRequest{
 	string UserToken = 1;
 }
+
+
 
 message UserAccountsResponse{
 	map<string, string> Accounts = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 message OrderRow{
 	google.protobuf.Timestamp ExpirDate = 1;
@@ -399,10 +450,14 @@ message OrderRow{
 	map<string, string> ExtendedFields = 103;
 }
 
+
+
 message BasketOrderRequest{
 	string UserToken = 1;
 	repeated OrderRow Orders = 2;
 }
+
+
 
 message BasketOrderResponse{
 	string ServerResponse = 1;
@@ -410,21 +465,29 @@ message BasketOrderResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message AllocationType{
+
 	enum Allocation{
 		UserSubmitAllocation = 0;
 		UserSubmitAllocationEx = 1;
 	}
+
 	Allocation AllocationOrAllocationEx = 1;
 }
 
+
 message OrderType{
+
 	enum Type{
 		UserSubmitOrder = 0;
 		ForeignExecution = 1;
 	}
+
 	Type TypeOfOrder = 1;
 }
+
 
 message SubmitAllocationOrderRequest{
 	string OrderId = 1;
@@ -439,19 +502,26 @@ message SubmitAllocationOrderRequest{
 	OrderType OrderTypes = 10;
 }
 
+
+
 message SubmitAllocationOrderResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message TradeType{
+
 	enum TypeofOrder{
 		UserSubmitTradeReport = 0;
 		ForeignExecution = 1;
 	}
+
 	TypeofOrder OrderTypes = 1;
 }
+
 
 message SubmitTradeReportRequest{
 	string Symbol = 1;
@@ -464,12 +534,16 @@ message SubmitTradeReportRequest{
 	string UserToken = 8;
 }
 
+
+
 message SubmitTradeReportResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 
 }
+
+
 
 message OrderInfoFilters{
 	bool IncludeOrders = 1;
@@ -478,25 +552,35 @@ message OrderInfoFilters{
 	bool IncludeExchangeKillOrder  = 4;
 }
 
+
+
 message SubscribeOrderInfoJsonRequest{
 	string UserToken = 1;
 	OrderInfoFilters Filters = 2;
 }
+
+
 
 message SubscribeOrderInfoJsonResponse{
 	string OrderInfoJson = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+
+
 message OrderDetailByOrderIdRequest{
 	string UserToken = 1;
 	string OrderId = 2;
 }
 
+
+
 message OrderDetailByOrderIdResponse{
 	repeated OrderDetailsResponse OrderDetails = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 message OrderDetailByOrderTagRequest{
 	string UserToken = 1;
@@ -504,10 +588,14 @@ message OrderDetailByOrderTagRequest{
 	string OrderEventType = 3;
 }
 
+
+
 message OrderDetailByOrderTagResponse{
 	repeated OrderDetailsResponse OrderDetails = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 
 message OrderDetailByDateRangeRequest{
@@ -520,27 +608,29 @@ message OrderDetailByDateRangeRequest{
 	string Account = 7;
 }
 
+
+
 message OrderDetailByDateRangeResponse{
 	OrderDetailsResponse OrderDetail = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
-service SubmitOrderService{
-	rpc SubmitSingleOrder (SubmitSingleOrderRequest) returns (SubmitSingleOrderResponse);
-	rpc SubmitBookTrade (SubmitBookTradeRequest) returns (SubmitBookTradeResponse);
-	rpc SubmitPairOrder (SubmitPairOrderRequest) returns (SubmitPairOrderResponse);
-	rpc ChangePairOrder (ChangePairOrderRequest) returns (ChangePairOrderResponse);
-	rpc CancelPairOrder (CancelPairOrderRequest) returns (CancelPairOrderResponse);
-	rpc ChangeSingleOrder (ChangeSingleOrderRequest) returns (ChangeSingleOrderResponse);
-	rpc CancelSingleOrder (CancelSingleOrderRequest) returns (CancelSingleOrderResponse);
-	rpc SubmitSeedData (SubmitSeedDataRequest) returns (SubmitSeedDataResponse);
-	rpc GetUserAccounts (UserAccountsRequest) returns (UserAccountsResponse);
-	rpc SubmitBasketOrder (BasketOrderRequest) returns (BasketOrderResponse);
-	rpc SubscribeOrderInfo (SubscribeOrderInfoRequest) returns (stream SubscribeOrderInfoResponse);
-	rpc SubmitAllocationOrder (SubmitAllocationOrderRequest) returns (SubmitAllocationOrderResponse);
-	rpc SubmitTradeReport (SubmitTradeReportRequest) returns (SubmitTradeReportResponse);
-	rpc SubscribeOrderInfoJson (SubscribeOrderInfoJsonRequest) returns (stream SubscribeOrderInfoJsonResponse);
-	rpc GetOrderDetailByOrderId (OrderDetailByOrderIdRequest) returns (OrderDetailByOrderIdResponse);
-	rpc GetOrderDetailByDateRange (OrderDetailByDateRangeRequest) returns (stream OrderDetailByDateRangeResponse);
-	rpc GetOrderDetailByOrderTag (OrderDetailByOrderTagRequest) returns (OrderDetailByOrderTagResponse);
+service SubmitOrderService {
+  rpc SubmitSingleOrder(SubmitSingleOrderRequest) returns (SubmitSingleOrderResponse);
+  rpc SubmitBookTrade(SubmitBookTradeRequest) returns (SubmitBookTradeResponse);
+  rpc SubmitPairOrder(SubmitPairOrderRequest) returns (SubmitPairOrderResponse);
+  rpc ChangePairOrder(ChangePairOrderRequest) returns (ChangePairOrderResponse);
+  rpc CancelPairOrder(CancelPairOrderRequest) returns (CancelPairOrderResponse);
+  rpc ChangeSingleOrder(ChangeSingleOrderRequest) returns (ChangeSingleOrderResponse);
+  rpc CancelSingleOrder(CancelSingleOrderRequest) returns (CancelSingleOrderResponse);
+  rpc SubmitSeedData(SubmitSeedDataRequest) returns (SubmitSeedDataResponse);
+  rpc GetUserAccounts(UserAccountsRequest) returns (UserAccountsResponse);
+  rpc SubmitBasketOrder(BasketOrderRequest) returns (BasketOrderResponse);
+  rpc SubscribeOrderInfo(SubscribeOrderInfoRequest) returns (stream SubscribeOrderInfoResponse);
+  rpc SubmitAllocationOrder(SubmitAllocationOrderRequest) returns (SubmitAllocationOrderResponse);
+  rpc SubmitTradeReport(SubmitTradeReportRequest) returns (SubmitTradeReportResponse);
+  rpc SubscribeOrderInfoJson (SubscribeOrderInfoJsonRequest) returns (stream SubscribeOrderInfoJsonResponse);
+  rpc GetOrderDetailByDateRange(OrderDetailByDateRangeRequest) returns (stream OrderDetailByDateRangeResponse);
+  rpc GetOrderDetailByOrderId(OrderDetailByOrderIdRequest) returns (OrderDetailByOrderIdResponse);
+  rpc GetOrderDetailByOrderTag(OrderDetailByOrderTagRequest) returns (OrderDetailByOrderTagResponse);
 }
