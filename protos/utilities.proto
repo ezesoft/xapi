@@ -1,11 +1,13 @@
-﻿// Version : "Dev"
+// Version : "2026.5.0"
 
 syntax = "proto3";
+
 import "google/protobuf/timestamp.proto";
+
 import "google/protobuf/wrappers.proto";
 
-
 message ServerAcknowledgement{
+
 	enum ResponseCodesEnum{
 		SUCCESS = 0;
 		WARNING = 1;
@@ -15,16 +17,20 @@ message ServerAcknowledgement{
 		SESSION_NOT_FOUND = 5;
 	}
 
+
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	string Message = 3;
 	ResponseCodesEnum ResponseCode = 4;
 }
 
+
 message StartLoginSrpRequest{
 	string UserName = 1;
 	string Domain = 2;
 }
+
+
 
 message StartLoginSrpResponse{
 	string Status = 1;
@@ -38,6 +44,8 @@ message StartLoginSrpResponse{
 
 }
 
+
+
 message CompleteLoginSrpRequest{
 	string Identity = 1;
 	string srpTransactId = 2;
@@ -48,11 +56,31 @@ message CompleteLoginSrpRequest{
 	string Locale = 7;
 }
 
+
+
 message CompleteLoginSrpResponse{
 	string UserToken = 1;
 	string Response = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
+
+message MultiFactorAuthenticationRequest{
+	string VerificationCode = 1;
+	string MFASecurityCode = 2;
+	string UserName = 3;
+	string Domain = 4;
+	string Locale = 5;
+}
+
+message MultiFactorAuthenticationResponse{
+	string UserToken = 1;
+	string Response = 2;
+	ServerAcknowledgement Acknowledgement = 3;
+}
+
+
 
 message Price{
 	double DecimalValue = 1;
@@ -64,6 +92,8 @@ message Price{
 	int32 IntegerValue = 7;
 	bool Isnull = 8;
 }
+
+
 
 message Position{
 	double AverageShort0 = 1;
@@ -103,6 +133,8 @@ message Position{
 	int32 Styp = 35;
 }
 
+
+
 message AggregatePositionRecord{
 	double SoldShortQty = 1;
 	double SoldQty = 2;
@@ -129,6 +161,8 @@ message AggregatePositionRecord{
 	string Bank = 23;
 	map<string, string> ExtendedFields = 24;
 }
+
+
 
 message OrderResponse{
 	google.protobuf.Timestamp submitTime = 1;
@@ -161,6 +195,8 @@ message OrderResponse{
 	string OrderTag = 31;
 	int32 VolumeTraded = 32;
 }
+
+
 
 message DepositRow{
 	double Mmr0Adj = 1;
@@ -201,15 +237,21 @@ message DepositRow{
 	map<string, string> ExtendedFields = 36;
 }
 
+
+
 message TodaysBalancesRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
 }
 
+
+
 message TodaysBalancesResponse{
 	repeated DepositRow DepositList = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 message TodaysActivityRequest{
 	string UserToken = 1;
@@ -230,10 +272,14 @@ message TodaysActivityRequest{
 	bool UserSubmitStagedOrderFullInfo = 16;
 }
 
+
+
 message TodaysActivityResponse{
 	repeated OrderResponse OrderRecordList = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 message BookOrder{
 	OrderResponse Order = 1;
@@ -248,6 +294,8 @@ message BookOrder{
 	double AveragePrice = 10;
 }
 
+
+
 message TodaysBrokenDownPositionsRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
@@ -255,35 +303,48 @@ message TodaysBrokenDownPositionsRequest{
 	string TickerFilter = 4;
 }
 
+
+
 message TodaysBrokenDownPositionsResponse{
 	repeated Position PositionRecords = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 message TodaysNetPositionsRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
 }
 
+
+
 message TodaysNetPositionsResponse{
 	repeated AggregatePositionRecord AggregatePositionsList = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+
+
 message SubscribeNetPositionsRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
 }
+
 message SubscribeNetPositionsResponse{
 	AggregatePositionRecord AggregatePositions = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
 message UnSubscribeNetPositionsRequest{
 	string UserToken = 1;
 }
+
 message UnSubscribeNetPositionsResponse{
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 message ConnectRequest{
 	string UserName = 1;
@@ -292,22 +353,34 @@ message ConnectRequest{
 	string Locale = 4;
 }
 
+
+
 message ConnectResponse{
 	string UserToken = 1;
 	string Response = 2;
 	ServerAcknowledgement Acknowledgement = 3;
+	string DPermStatusCode = 4;
+	string MFASecurityCode = 5;
+	string MFAtotpPreference = 6;
+	string MFAtotpValue = 7;
 }
+
+
 
 message DisconnectRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
 }
 
+
+
 message DisconnectResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
 
 message ChangePasswordSRPRequest{
 	string TransactId = 1;
@@ -317,26 +390,52 @@ message ChangePasswordSRPRequest{
 	string NewPassword = 5;
 }
 
+
+
 message ChangePasswordSRPResponse{
 	string status = 1;
 	string message = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
+message ChangePasswordRequest{
+	string UserName = 1;
+	string Domain = 2;
+	string OldPassword = 3;
+	string NewPassword = 4;
+}
+
+
+
+message ChangePasswordResponse{
+	string status = 1;
+	string message = 2;
+	ServerAcknowledgement Acknowledgement = 3;
+}
+
+
+
 message SubscribeHeartBeatRequest{
 	string UserToken = 1;
 	int32 TimeoutInSeconds = 2;
 }
 
+
+
 message SubscribeHeartBeatResponse{
+
 	enum HeartBeatStatus{
 		LIVE = 0;
 		DEAD = 1;
 		UNKNOWN = 2;
 		}
+
 	HeartBeatStatus Status = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
 
 message StrategyListRow{
 	string FirmName = 1;
@@ -346,29 +445,41 @@ message StrategyListRow{
 	string StratCreateDate = 5;
 }
 
+
+
 message StrategyListRequest{
 	string UserToken = 1;
 	string FirmName = 2;
 }
+
+
 
 message StrategyListResponse{
 	repeated StrategyListRow StrategyList = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+
+
 message GetFirmNameRequest{
 	string UserToken = 1;
 }
+
+
 
 message GetFirmNameResponse{
 	string FirmName = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+
+
 message UserExistsRequest{
 	string UserToken = 1;
 	string FirmName = 2;
 }
+
+
 
 message UserExistsResponse{
 	bool UserExists = 1;
@@ -376,12 +487,16 @@ message UserExistsResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message GetStrategyDataRequest{
 	string UserToken = 1;
 	string FirmName = 2;
 	string AlgoName = 3;
 	string StrategyName = 4;
 }
+
+
 
 message StrategyDataRow{
 	string FirmName = 1;
@@ -394,10 +509,16 @@ message StrategyDataRow{
 	string StratUpdateDate = 8;
 }
 
+
+
 message GetStrategyDataResponse{
 	StrategyDataRow StrategyData = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
+
+
 
 message CreateStrategyRequest{
 	string UserToken = 1;
@@ -407,9 +528,13 @@ message CreateStrategyRequest{
 	string StratParams = 5;
 }
 
+
+
 message CreateStrategyResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 }
+
+
 
 message UpdateStrategyRequest{
 	string UserToken = 1;
@@ -420,9 +545,13 @@ message UpdateStrategyRequest{
 	string StratParams = 6;
 }
 
+
+
 message UpdateStrategyResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 }
+
+
 
 message TodaysActivityJsonRequest{
 	string UserToken = 1;
@@ -442,24 +571,34 @@ message TodaysActivityJsonRequest{
 	bool IncludeOnlyCompleted = 15;
 }
 
+
+
 message TodaysActivityJsonResponse{
 	string TodaysActivityJson = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
+
+
 
 message GetUserRoutesRequest{
 	string UserToken = 1;
 	string AccountList = 2;
 }
 
+
+
 message GetUserRoutesResponse{
 	map<string, string> UserRoutes = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+
+
 message RoutePropsMap{
 	map<string, string> Properties = 1;
 }
+
+
 
 message GetUserRoutePropsRequest{
 	string UserToken = 1;
@@ -467,12 +606,17 @@ message GetUserRoutePropsRequest{
 	string FilterRoutePropsList = 3;
 }
 
+
+
 message GetUserRoutePropsResponse{
 	map<string, RoutePropsMap> UserRouteProps = 1;
 	ServerAcknowledgement Acknowledgement = 2;
 }
 
+
+
 message ExpirationType{
+
 	enum ExpirationTypes{
 		DAY = 0;
 		GTC = 1;
@@ -483,10 +627,13 @@ message ExpirationType{
 		GTD = 6;
 		OTHER = 7;
 	}
+
 	ExpirationTypes Expiration = 1;
 }
 
+
 message PriceTypeEnum{
+
 	enum PriceTypesEnum{
 		Market = 0;
 		Limit = 1;
@@ -494,30 +641,33 @@ message PriceTypeEnum{
 		StopLimit = 3;
 		Other = 4;
 	}
+
 	PriceTypesEnum PriceType = 1;
 }
 
 
-service UtilityServices{
-	rpc GetTodaysBalances (TodaysBalancesRequest) returns (TodaysBalancesResponse);
-	rpc GetTodaysActivity (TodaysActivityRequest) returns (TodaysActivityResponse);
-	rpc GetTodaysBrokenDownPositions (TodaysBrokenDownPositionsRequest) returns (TodaysBrokenDownPositionsResponse);
-	rpc GetTodaysNetPositions (TodaysNetPositionsRequest) returns (TodaysNetPositionsResponse);
-	rpc SubscribeTodaysNetPositions (SubscribeNetPositionsRequest) returns (stream SubscribeNetPositionsResponse);
-	rpc UnSubscribeTodaysNetPositions (UnSubscribeNetPositionsRequest) returns ( UnSubscribeNetPositionsResponse);
-	rpc Connect (ConnectRequest) returns (ConnectResponse);
-	rpc SubscribeHeartBeat (SubscribeHeartBeatRequest) returns (stream SubscribeHeartBeatResponse);
-	rpc Disconnect (DisconnectRequest) returns (DisconnectResponse);
-	rpc StartLoginSrp (StartLoginSrpRequest) returns (StartLoginSrpResponse);
-	rpc CompleteLoginSrp (CompleteLoginSrpRequest) returns (CompleteLoginSrpResponse);
-	rpc ChangePasswordSRP (ChangePasswordSRPRequest) returns (ChangePasswordSRPResponse);
-	rpc GetStrategyList (StrategyListRequest) returns (StrategyListResponse);
-	rpc GetFirmName (GetFirmNameRequest) returns (GetFirmNameResponse);
-	rpc UserExists (UserExistsRequest) returns (UserExistsResponse);
-	rpc GetStrategyData (GetStrategyDataRequest) returns (GetStrategyDataResponse);
-	rpc CreateStrategy (CreateStrategyRequest) returns (CreateStrategyResponse);
-	rpc UpdateStrategy (UpdateStrategyRequest) returns (UpdateStrategyResponse);
-	rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
-	rpc GetUserRoutes (GetUserRoutesRequest) returns (GetUserRoutesResponse);
-	rpc GetUserRouteProps (GetUserRoutePropsRequest) returns (GetUserRoutePropsResponse);
-}
+service UtilityServices {
+  rpc GetTodaysBalances(TodaysBalancesRequest) returns (TodaysBalancesResponse);
+  rpc GetTodaysActivity(TodaysActivityRequest) returns (TodaysActivityResponse);
+  rpc GetTodaysBrokenDownPositions(TodaysBrokenDownPositionsRequest) returns (TodaysBrokenDownPositionsResponse);
+  rpc GetTodaysNetPositions(TodaysNetPositionsRequest) returns (TodaysNetPositionsResponse);
+  rpc SubscribeTodaysNetPositions(SubscribeNetPositionsRequest) returns (stream SubscribeNetPositionsResponse);
+  rpc UnSubscribeTodaysNetPositions(UnSubscribeNetPositionsRequest) returns ( UnSubscribeNetPositionsResponse);
+  rpc Connect(ConnectRequest) returns (ConnectResponse);
+  rpc SubscribeHeartBeat(SubscribeHeartBeatRequest) returns (stream SubscribeHeartBeatResponse);
+  rpc Disconnect(DisconnectRequest) returns (DisconnectResponse);
+  rpc StartLoginSrp(StartLoginSrpRequest) returns (StartLoginSrpResponse);
+  rpc CompleteLoginSrp(CompleteLoginSrpRequest) returns (CompleteLoginSrpResponse);
+  rpc MultiFactorAuthentication(MultiFactorAuthenticationRequest) returns (MultiFactorAuthenticationResponse);
+  rpc ChangePasswordSRP(ChangePasswordSRPRequest) returns (ChangePasswordSRPResponse);
+  rpc ChangePassword(ChangePasswordRequest) returns (ChangePasswordResponse);
+  rpc GetStrategyList(StrategyListRequest) returns (StrategyListResponse);
+  rpc GetFirmName(GetFirmNameRequest) returns (GetFirmNameResponse);
+  rpc UserExists(UserExistsRequest) returns (UserExistsResponse);
+  rpc GetStrategyData(GetStrategyDataRequest) returns (GetStrategyDataResponse);
+  rpc CreateStrategy(CreateStrategyRequest) returns (CreateStrategyResponse);
+  rpc UpdateStrategy(UpdateStrategyRequest) returns (UpdateStrategyResponse);
+  rpc GetTodaysActivityJson (TodaysActivityJsonRequest) returns (TodaysActivityJsonResponse);
+  rpc GetUserRoutes(GetUserRoutesRequest) returns (GetUserRoutesResponse);
+  rpc GetUserRouteProps(GetUserRoutePropsRequest) returns (GetUserRoutePropsResponse);
+  }

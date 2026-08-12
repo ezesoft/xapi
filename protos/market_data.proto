@@ -1,4 +1,4 @@
-﻿// Version : "Dev"
+// Version : "2026.5.0"
 
 syntax = "proto3";
 
@@ -18,7 +18,7 @@ message OptionTypes{
 		PUT = 1;
 	}
 
-Options CallOrPut = 1;
+	Options CallOrPut = 1;
 }
 
 message Interval{
@@ -29,7 +29,7 @@ message Interval{
 		MONTHLY = 2;
 	}
 
-Options BarIntervalOption = 1;
+	Options BarIntervalOption = 1;
 }
 
 message TickTypes{
@@ -46,8 +46,9 @@ message TickTypes{
 		FORM_T_TRADE = 32;
 	}
 
-Ticks TickOption = 1;
+	Ticks TickOption = 1;
 }
+
 
 message CommonBarsFields{
 	repeated int32 AcVol1 = 2;
@@ -76,6 +77,7 @@ message DailyWeeklyMonthlyBarsResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
 // Intraday - Request, Response
 
 message IntradayBarsRequest{
@@ -96,6 +98,7 @@ message IntradayBarsResponse{
 	repeated string TrdTim1 = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
 
 // Live Quote: Options Symbology Request, Response
 
@@ -124,6 +127,7 @@ message DescriptionFromOptionSymbolResponse{
 	double StrikePrice = 4;
 	ServerAcknowledgement Acknowledgement = 5;
 }
+
 
 // Live Quote: Level 1 Data Request, Response
 
@@ -161,9 +165,13 @@ message Level1MarketDataResponse{
 	map<string, string> ExtendedFields = 23;
 }
 
+
+
 message UnSubscribeLevel1DataRequest{
 	string UserToken = 1;
 }
+
+
 
 message UnSubscribeLevel1DataResponse{
 	string ServerResponse = 1;
@@ -171,13 +179,19 @@ message UnSubscribeLevel1DataResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
 
+
+
 message UnSubscribeTickDataRequest{
 	string UserToken = 1;
 }
 
+
+
 message UnSubscribeTickDataResponse{
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
 
 message AddSymbolsRequest{
 	string UserToken = 1;
@@ -185,11 +199,15 @@ message AddSymbolsRequest{
 	string MarketDataLevel = 3;
 }
 
+
+
 message AddSymbolsResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
 
 message RemoveSymbolsRequest{
 	string UserToken = 1;
@@ -197,11 +215,14 @@ message RemoveSymbolsRequest{
 	string MarketDataLevel = 3;
 }
 
+
+
 message RemoveSymbolsResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
 
 // Market Makers: Level 2 Data Request, Response
 
@@ -237,15 +258,20 @@ message Level2MarketDataResponse{
 	Price MktMkrAsk = 20;
 }
 
+
+
 message UnSubscribeLevel2DataRequest{
 	string UserToken = 1;
 }
+
+
 
 message UnSubscribeLevel2DataResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
 
 // Quote Chain: Request, Response
 
@@ -275,6 +301,7 @@ message OptionChainResponse{
 	repeated QuoteChainResponse Derivative = 2;
 }
 
+
 // SymInfo: Request, Response
 
 message SymbolReferenceDataRequest{
@@ -296,6 +323,7 @@ message SymbolReferenceDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated SymInfoResponse SymInfoList = 2;
 }
+
 
 // Ticks: Request, Response
 
@@ -348,6 +376,65 @@ message SubscribeTickDataResponse{
 	int32 Count = 9;
 }
 
+
+// Streaming Intraday Bars: ticks aggregated server-side into OHLCV bars.
+// Initial DaysBack window is delivered as HISTORICAL bars before the live
+// advise starts. Live updates emit CLOSED on bar-boundary crossing; PARTIAL
+// updates are emitted per tick only when EmitPartialBars=true.
+
+enum BarUpdateKind {
+	BAR_KIND_UNSPECIFIED = 0;
+	BAR_KIND_HISTORICAL  = 1;
+	BAR_KIND_PARTIAL     = 2;
+	BAR_KIND_CLOSED      = 3;
+}
+
+message IntradayBarUpdate {
+	google.protobuf.Timestamp OpenTime = 1;
+	google.protobuf.Duration  TrdTim1  = 2;
+	Price OpenPrc = 3;
+	Price High1   = 4;
+	Price Low1    = 5;
+	Price Settle  = 6;
+	int32 AcVol1  = 7;
+	int32 TickCount = 8;
+	google.protobuf.DoubleValue Vwap = 9;
+	BarUpdateKind Kind = 10;
+	// REQ-7: symbol this bar belongs to. Populated on every update so multi-symbol
+	// fan-in streams can be demuxed client-side. Old single-symbol clients that
+	// ignore this field see the same DispName they always had at the response level.
+	string Symbol = 11;
+}
+
+message SubscribeIntradayBarsRequest {
+	string UserToken = 1;
+	// One or more symbols to subscribe. Each symbol gets its own aggregator and
+	// toolkit advise, fanning into the same server-stream. Every emitted
+	// IntradayBarUpdate.Symbol identifies which symbol the bar belongs to. If any
+	// symbol lacks permission the entire subscription fails (fail-fast).
+	// SinceTimestamp, if provided, applies uniformly to all symbols - the caller
+	// should pass the earliest last-CLOSED OpenTime across the set they held.
+	repeated string Symbols = 2;
+	int32  BarInterval = 3;
+	bool   StartAtMidnight = 4;
+	bool   ShowPrePostMarket = 5;
+	google.protobuf.Int32Value DaysBack = 6;
+	google.protobuf.Int32Value RequestId = 7;
+	bool   EmitPartialBars = 8;
+	google.protobuf.Int32Value PartialIntervalSeconds = 9;
+	google.protobuf.Timestamp SinceTimestamp = 10;
+}
+
+message SubscribeIntradayBarsResponse {
+	ServerAcknowledgement Acknowledgement = 1;
+	string DispName = 2;
+	int32  BarInterval = 3;
+	repeated IntradayBarUpdate Bars = 4;
+}
+
+message UnSubscribeIntradayBarsRequest  { string UserToken = 1; }
+
+message UnSubscribeIntradayBarsResponse { ServerAcknowledgement Acknowledgement = 1; }
 // Option Server: Request, Response
 
 message OptionsAndGreekDataRequest{
@@ -390,6 +477,7 @@ message OptionsAndGreekDataResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated OptionCalculationResponse OptionsList = 2;
 }
+
 
 // SecurityInfo: Request, Response
 
@@ -462,6 +550,8 @@ message SecurityDataResponse{
 	repeated SecurityData SecurityInfoList = 2;
 }
 
+
+
 message SymbolData{
 	string DispName = 1;
 	string ExchName = 2;
@@ -486,10 +576,14 @@ message SymbolsFromCompanyNameRequest{
 	string CompanyName = 2;
 }
 
+
+
 message SymbolsFromCompanyNameResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated SymbolData SymbolDatalist = 2;
 }
+
+
 
 message AlternateSymbology{
 
@@ -501,8 +595,9 @@ message AlternateSymbology{
 		BBG = 4;
 	}
 
-Symbology SymbolOption = 1;
+	Symbology SymbolOption = 1;
 }
+
 
 message SymbolFromAlternateSymbologyRequest{
 	string UserToken = 1;
@@ -510,6 +605,7 @@ message SymbolFromAlternateSymbologyRequest{
 	AlternateSymbology SymbolInfo = 3;
 	repeated string Symbols = 4;  // Bulk symbols (new - takes precedence if provided)
 }
+
 
 // Individual result for each symbol lookup
 
@@ -519,6 +615,8 @@ message SymbolLookupResult{
 	repeated SymbolData SymbolInfolist = 3;
 }
 
+
+
 message SymbolFromAlternateSymbologyResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated SymbolData SymbolInfolist = 2;  // For single symbol (backward compatible)
@@ -527,6 +625,8 @@ message SymbolFromAlternateSymbologyResponse{
 	int32 FailureCount = 5;  // Count of failed lookups (bulk only)
 	int32 TotalCount = 6;  // Total symbols requested (bulk only)
 }
+
+
 
 message Level1MarketDataRecord{
 	string DispName = 2;
@@ -553,6 +653,8 @@ message Level1MarketDataRecord{
 	map<string, string> ExtendedFields = 23;
 }
 
+
+
 message Level1FieldOptions {
 
 	enum Fields {
@@ -577,9 +679,10 @@ message Level1FieldOptions {
 		EXTENDED_FIELDS = 18;
 	}
 
-repeated Fields RequestedFields = 1;
+	repeated Fields RequestedFields = 1;
 	repeated string RequestedExtendedFields = 2;
 }
+
 
 message Level1MarketDataRecordRequest{
 	string UserToken = 1;
@@ -588,10 +691,13 @@ message Level1MarketDataRecordRequest{
 	optional Level1FieldOptions FieldSelection = 4;
 }
 
+
+
 message Level1MarketDataRecordResponse{
 	ServerAcknowledgement Acknowledgement = 1;
 	repeated Level1MarketDataRecord DataRecord= 2;
 }
+
 
 // Bidirectional Real-Time Level 2 Market Data Streaming - Request, Response
 
@@ -599,17 +705,39 @@ message MarketDataStreamRequest{
 	string UserToken = 1;
 	string RequestType = 2; // ADD_SYMBOL, REMOVE_SYMBOL, CHANGE_SUBSCRIPTION
 	repeated string Symbols = 3;
-	string MarketDataLevel = 4; // LEVEL1, LEVEL2, TICK
+	string MarketDataLevel = 4; // LEVEL1, LEVEL2, TICK, INTRADAY_BARS
 	repeated string RegionalExchangeIds = 5;
 	repeated string MarketSource = 6;
 	bool Request = 7;
 	bool Advise = 8;
+
+	// Intraday-bar configuration. Populated only when MarketDataLevel == INTRADAY_BARS.
+	// Alignment with Symbols (parallel arrays, matches the existing repeated-Symbols convention):
+	//   * empty            → default 5m applied to every symbol
+	//   * length 1         → that single interval applied to every symbol
+	//   * length N (== |Symbols|) → per-symbol intervals aligned by index
+	//   * anything else    → request is rejected with a FAILED acknowledgement
+	// Allowed interval values must match the whitelist enforced by SubscribeIntradayBars
+	// (1, 5, 15, 30, 60, 240, 1440). Unsupported intervals are rejected server-side.
+	repeated int32 BarIntervals = 9;
+
+	// When true the server emits BAR_KIND_PARTIAL on every trade tick in addition to
+	// BAR_KIND_CLOSED at bar-boundary crossings. Default (false) is low-bandwidth mode.
+	bool EmitPartialBars = 10;
+
+	// Historical backfill window in trading days. When > 0 the server pushes
+	// BAR_KIND_HISTORICAL bars before opening the live tick advise. 0 or absent means
+	// live-only. Only honored on the ADD_SYMBOL request that first introduces the
+	// symbol at INTRADAY_BARS level; subsequent adds for the same symbol are live-only.
+	google.protobuf.Int32Value DaysBack = 11;
 }
+
+
 
 message MarketDataStreamResponse{
 	ServerAcknowledgement Acknowledgement = 1;
-	string ResponseType = 2; // LEVEL1_DATA, LEVEL2_DATA, TICK_DATA, STATUS_UPDATE
-	
+	string ResponseType = 2; // LEVEL1_DATA, LEVEL2_DATA, TICK_DATA, INTRADAY_BAR_DATA, STATUS_UPDATE
+
 	// Level 1 Data
 	string DispName = 3;
 	Price Trdprc1 = 4;
@@ -622,7 +750,7 @@ message MarketDataStreamResponse{
 	Price High1 = 11;
 	Price Low1 = 12;
 	map<string, string> ExtendedFields = 13;
-	
+
 	// Level 2 Data
 	string MktSource = 14;
 	string MktMkrId = 15;
@@ -633,7 +761,7 @@ message MarketDataStreamResponse{
 	google.protobuf.Int32Value MktMkrAsksize = 20;
 	Price MktMkrBid = 21;
 	Price MktMkrAsk = 22;
-	
+
 	// Tick Data
 	repeated Price TrdPrc1List = 23;
 	repeated google.protobuf.Timestamp TrdDateList = 24;
@@ -642,20 +770,33 @@ message MarketDataStreamResponse{
 	repeated int32 TrdVol1List = 27;
 	repeated google.protobuf.Duration TrdTim1List = 28;
 	int32 Count = 29;
-	
+
 	// Status Information
 	string StatusMessage = 30;
+
+	// Intraday bar data. Populated only when ResponseType == INTRADAY_BAR_DATA.
+	// Reuses the IntradayBarUpdate message defined for SubscribeIntradayBars so
+	// both RPCs speak the same bar shape. IntradayBarUpdate.Symbol carries the
+	// bar's owning symbol; DispName above mirrors it for legacy demux.
+	IntradayBarUpdate Bar = 31;
+	int32 BarInterval = 32; // Interval (minutes) of the bar in this response.
 }
+
+
 
 message UnSubscribeStreamMarketDataRequest{
 	string UserToken = 1;
 }
+
+
 
 message UnSubscribeStreamMarketDataResponse{
 	string ServerResponse = 1;
 	map<string, string> OptionalFields = 2;
 	ServerAcknowledgement Acknowledgement = 3;
 }
+
+
 
 service MarketDataService {
   rpc GetDailyWeeklyMonthlyBars(DailyWeeklyMonthlyBarsRequest) returns (DailyWeeklyMonthlyBarsResponse);
@@ -678,6 +819,8 @@ service MarketDataService {
   rpc GetLevel1MarketData(Level1MarketDataRecordRequest) returns (Level1MarketDataRecordResponse);
   rpc SubscribeTickData(SubscribeTickDataRequest) returns (stream SubscribeTickDataResponse);
   rpc UnSubscribeTickData(UnSubscribeTickDataRequest) returns (UnSubscribeTickDataResponse);
+  rpc SubscribeIntradayBars(SubscribeIntradayBarsRequest) returns (stream SubscribeIntradayBarsResponse);
+  rpc UnSubscribeIntradayBars(UnSubscribeIntradayBarsRequest) returns (UnSubscribeIntradayBarsResponse);
   // Bidirectional streaming API for real-time Level 2 market data
   rpc UnSubscribeStreamMarketData (UnSubscribeStreamMarketDataRequest) returns (UnSubscribeStreamMarketDataResponse);
   rpc StreamMarketData (stream MarketDataStreamRequest) returns (stream MarketDataStreamResponse);
