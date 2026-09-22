@@ -1,4 +1,4 @@
-// Version : "2026.5.0"
+// Version : "2026.6.0"
 
 syntax = "proto3";
 
@@ -483,7 +483,8 @@ message OptionsAndGreekDataResponse{
 
 message SecurityDataRequest{
 	string UserToken = 1;
-	string Symbol = 2;
+	string Symbol = 2;  // Single symbol (backward compatible)
+	repeated string Symbols = 3;  // Bulk symbols (new - takes precedence if provided)
 }
 
 message SecurityData{
@@ -543,6 +544,7 @@ message SecurityData{
 	string RicCode = 54;
 	string Sedol = 55;
 	string MIC = 56;
+	string Region = 57;
 }
 
 message SecurityDataResponse{

@@ -1,4 +1,4 @@
-// Version : "2026.5.0"
+// Version : "2026.6.0"
 
 syntax = "proto3";
 
@@ -606,6 +606,8 @@ message OrderDetailByDateRangeRequest{
 	google.protobuf.Duration EndTime = 5;
 	int32 TimeoutInSeconds = 6;
 	string Account = 7;
+	string Symbol = 8;
+	string OriginalOrderId = 9;
 }
 
 
