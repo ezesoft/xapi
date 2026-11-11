@@ -1,4 +1,4 @@
-// Version : "2026.6.1"
+// Version : "2026.7.0"
 
 syntax = "proto3";
 
@@ -608,6 +608,7 @@ message OrderDetailByDateRangeRequest{
 	string Account = 7;
 	string Symbol = 8;
 	string OriginalOrderId = 9;
+	bool IncludeExchangeTradeOrder = 10;
 }
 
 
